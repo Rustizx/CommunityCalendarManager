@@ -1,0 +1,16 @@
+{
+  "name": "community-calendar-manager",
+  "version": "0.0.1",
+  "description": "A community calendar fundraiser manager",
+  "main": "./dist/main/main.js",
+  "author": {
+    "name": "Josh Blayone",
+    "url": "https://josh.blayone.com"
+  },
+  "scripts": {
+    "electron-rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
+    "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts",
+    "postinstall": "npm run electron-rebuild && npm run link-modules"
+  },
+  "dependencies": {}
+}
