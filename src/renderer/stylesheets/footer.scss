@@ -1,0 +1,15 @@
+@import '~rfs/scss';
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 3rem;
+}
+
+.footer-text {
+  color: white;
+  font-family: 'NunitoSemiBold';
+  text-align: center;
+  @include font-size(1rem);
+}
