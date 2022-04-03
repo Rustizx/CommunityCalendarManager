@@ -36,7 +36,7 @@ async function createCalendarFileDialog() {
 
 export default function Dialogs() {
   ipcMain.handle('dialog:open-calender-file', openCalendarFileDialog);
-  ipcMain.handle('dialog:create-calendar-file', createCalendarFileDialog);
+  ipcMain.handle('dialog:create-calender-file', createCalendarFileDialog);
   ipcMain.on('dialog:error-message', async (_event, arg) => {
     errorBox(arg);
   });

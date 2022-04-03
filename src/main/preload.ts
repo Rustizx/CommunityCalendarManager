@@ -13,7 +13,7 @@ contextBridge.exposeInMainWorld('electron', {
     createCalendarFileDialog: () =>
       ipcRenderer.invoke('dialog:create-calender-file'),
     errorMessage(mess: ErrorMessageType) {
-      ipcRenderer.send('dialog:error_message', mess);
+      ipcRenderer.send('dialog:error-message', mess);
     },
   },
 });
