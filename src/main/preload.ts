@@ -3,7 +3,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 contextBridge.exposeInMainWorld('electron', {
   ipcRenderer: {
     myPing() {
-      ipcRenderer.send('ipc-example', 'ping');
+      ipcRenderer.send('ipc-example', 'test test');
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     on(channel: string, func: (...args: any[]) => void) {

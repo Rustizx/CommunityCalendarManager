@@ -7,7 +7,14 @@
 
 @font-face {
   font-family: 'NunitoSemiBold';
-  src: local('NunitoBlack'),
+  src: local('NunitoSemiBold'),
     url('../../../assets/fonts/Nunito-SemiBold.ttf') format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'NunitoBold';
+  src: local('NunitoBold'),
+    url('../../../assets/fonts/Nunito-Bold.ttf') format('truetype');
   font-weight: normal;
 }
