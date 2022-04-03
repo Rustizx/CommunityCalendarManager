@@ -1,4 +1,3 @@
-import { ErrorMessageType } from 'main/ipc/types/dialogs-types';
 import { ReadFileType } from 'main/ipc/types/file-manager-types';
 
 declare global {
@@ -10,7 +9,6 @@ declare global {
       dialogs: {
         openCalendarFileDialog(): string;
         createCalendarFileDialog(): string;
-        errorMessage(mess: ErrorMessageType): void;
       };
     };
   }

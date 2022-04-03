@@ -1,9 +1,4 @@
 import { ipcMain, dialog } from 'electron';
-import { ErrorMessageType } from './types/dialogs-types';
-
-function errorBox(mess: ErrorMessageType) {
-  dialog.showErrorBox(mess.title, mess.message);
-}
 
 async function openCalendarFileDialog() {
   const { canceled, filePaths } = await dialog.showOpenDialog({
@@ -37,7 +32,4 @@ async function createCalendarFileDialog() {
 export default function Dialogs() {
   ipcMain.handle('dialog:open-calender-file', openCalendarFileDialog);
   ipcMain.handle('dialog:create-calender-file', createCalendarFileDialog);
-  ipcMain.on('dialog:error-message', async (_event, arg) => {
-    errorBox(arg);
-  });
 }

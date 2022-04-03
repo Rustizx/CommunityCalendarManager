@@ -1,5 +1,4 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { ErrorMessageType } from './ipc/types/dialogs-types';
 import { ReadFileType } from './ipc/types/file-manager-types';
 
 contextBridge.exposeInMainWorld('electron', {
@@ -12,8 +11,5 @@ contextBridge.exposeInMainWorld('electron', {
       ipcRenderer.invoke('dialog:open-calender-file'),
     createCalendarFileDialog: () =>
       ipcRenderer.invoke('dialog:create-calender-file'),
-    errorMessage(mess: ErrorMessageType) {
-      ipcRenderer.send('dialog:error-message', mess);
-    },
   },
 });

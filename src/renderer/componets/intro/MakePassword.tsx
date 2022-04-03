@@ -4,8 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import Spinner from 'react-bootstrap/Spinner';
 // import { useNavigate } from 'react-router-dom';
-
-import { ErrorMessageType } from 'main/ipc/types/dialogs-types';
+import Swal from 'sweetalert2';
 
 import AddIcon from '../../icons/AddIcon';
 
@@ -15,17 +14,19 @@ function MakePassword() {
   const [password, setPassword] = useState('');
   const [verifyPassword, setVerifyPassword] = useState('');
 
-  const defaultErrorMessage: ErrorMessageType = {
-    title: 'Error',
-    message: 'Invalid Password',
-  };
-
   function openCalendar() {
     setLoading(true);
     if (password === verifyPassword) {
       setLoading(false);
     } else {
-      window.electron.dialogs.errorMessage(defaultErrorMessage);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: "The passwords you entered don't match",
+        allowOutsideClick: false,
+        confirmButtonColor: 'rgba(72, 121, 254, 1)',
+      });
+      setLoading(false);
     }
   }
 
