@@ -1,9 +1,9 @@
-<h1> Community Calendar Manager </h1>
+<h1> CalFunder </h1>
 
 <br>
 
 <p>
-  Manage all aspects of a community calendar.
+  Manage all aspects of a community calendar. To be used for community calendar fundrasiers.
 </p>
 
 <br>

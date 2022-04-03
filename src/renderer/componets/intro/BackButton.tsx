@@ -17,7 +17,7 @@ export default function BackButton(props: BackButtonProps) {
         className="back-button"
         onClick={() => navigate('/')}
         onKeyDown={() => navigate('/')}
-        tabIndex={0}
+        tabIndex={-1}
       >
         <BackButtonIcon className="" width={32} height={32} />
         <span className="back-button-text">Back</span>

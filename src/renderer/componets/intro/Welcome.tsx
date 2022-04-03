@@ -34,7 +34,7 @@ function WelcomeScreen() {
           className="welcome-button"
           onClick={() => clickOpenExisting()}
           onKeyDown={() => clickOpenExisting()}
-          tabIndex={0}
+          tabIndex={-1}
         >
           <ImportExistingCalendarIcon
             className="welcome-button-icon welcome-button-icon-import"
@@ -48,7 +48,7 @@ function WelcomeScreen() {
           className="welcome-button"
           onClick={() => clickCreateNew()}
           onKeyDown={() => clickCreateNew()}
-          tabIndex={0}
+          tabIndex={-1}
         >
           <CreateNewCalendarIcon
             className="welcome-button-icon"

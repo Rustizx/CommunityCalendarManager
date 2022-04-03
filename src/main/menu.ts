@@ -54,17 +54,17 @@ export default class MenuBuilder {
 
   buildDarwinTemplate(): MenuItemConstructorOptions[] {
     const subMenuAbout: DarwinMenuItemConstructorOptions = {
-      label: 'CommunityCalendarManager',
+      label: 'CalFunder',
       submenu: [
         {
-          label: 'About CommunityCalendarManager',
+          label: 'About CalFunder',
           selector: 'orderFrontStandardAboutPanel:',
         },
         { type: 'separator' },
         { label: 'Services', submenu: [] },
         { type: 'separator' },
         {
-          label: 'Hide CommunityCalendarManager',
+          label: 'Hide CalFunder',
           accelerator: 'Command+H',
           selector: 'hide:',
         },

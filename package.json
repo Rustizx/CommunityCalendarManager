@@ -1,5 +1,5 @@
 {
-  "name": "community-calendar-manager",
+  "name": "calfunder",
   "description": "A community calendar fundraiser manager",
   "scripts": {
     "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
