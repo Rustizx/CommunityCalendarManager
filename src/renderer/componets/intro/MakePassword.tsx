@@ -5,7 +5,9 @@ import Form from 'react-bootstrap/Form';
 import Spinner from 'react-bootstrap/Spinner';
 // import { useNavigate } from 'react-router-dom';
 
-import AddIcon from 'renderer/icons/AddIcon';
+import { ErrorMessageType } from 'main/ipc/types/dialogs-types';
+
+import AddIcon from '../../icons/AddIcon';
 
 function MakePassword() {
   // const navigate = useNavigate();
@@ -13,9 +15,18 @@ function MakePassword() {
   const [password, setPassword] = useState('');
   const [verifyPassword, setVerifyPassword] = useState('');
 
+  const defaultErrorMessage: ErrorMessageType = {
+    title: 'Error',
+    message: 'Invalid Password',
+  };
+
   function openCalendar() {
     setLoading(true);
-    console.log(password);
+    if (password === verifyPassword) {
+      setLoading(false);
+    } else {
+      window.electron.dialogs.errorMessage(defaultErrorMessage);
+    }
   }
 
   return (

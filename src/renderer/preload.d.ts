@@ -1,12 +1,16 @@
+import { ErrorMessageType } from 'main/ipc/types/dialogs-types';
+import { ReadFileType } from 'main/ipc/types/file-manager-types';
+
 declare global {
   interface Window {
     electron: {
-      ipcRenderer: {
-        myPing(): void;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        on(channel: string, func: (...args: any[]) => void): void;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        once(channel: string, func: (...args: any[]) => void): void;
+      files: {
+        readCalendarFile(fileInfo: ReadFileType): string;
+      };
+      dialogs: {
+        openCalendarFileDialog(): string;
+        createCalendarFileDialog(): string;
+        errorMessage(mess: ErrorMessageType): void;
       };
     };
   }

@@ -8,14 +8,22 @@ import CreateNewCalendarIcon from '../../icons/AddFileIcon';
 function WelcomeScreen() {
   const navigate = useNavigate();
 
-  function clickOpenExisting() {
-    console.log('Open Existing Calendar');
-    navigate('/enter-password');
+  async function clickOpenExisting() {
+    const filePath: string =
+      await window.electron.dialogs.openCalendarFileDialog();
+    if (filePath !== '') {
+      console.log(filePath);
+      navigate('/enter-password');
+    }
   }
 
-  function clickCreateNew() {
-    console.log('Create New Calendar');
-    navigate('/make-password');
+  async function clickCreateNew() {
+    const filePath: string =
+      await window.electron.dialogs.createCalendarFileDialog();
+    if (filePath !== '') {
+      console.log(filePath);
+      navigate('/make-password');
+    }
   }
 
   return (
