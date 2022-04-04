@@ -1,11 +1,11 @@
-.password-body {
+.entermake-body {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.password-title {
+.entermake-title {
   margin-top: 50px;
   color: rgba(74, 74, 74);
   font-family: 'NunitoBold';
@@ -13,26 +13,26 @@
   text-align: center;
 }
 
-.password-subtitle {
+.entermake-subtitle {
   color: rgba(74, 74, 74);
   font-family: 'NunitoSemiBold';
   font-size: 18px;
   text-align: center;
 }
 
-.password-text-box {
+.entermake-text-box {
   width: 325px;
   margin-top: 10px;
 }
 
-.password-button-container {
+.entermake-button-container {
   margin-top: 2rem;
   flex-direction: row;
   align-items: center;
   justify-content: center;
 }
 
-.password-button-no-hover {
+.entermake-button-no-hover {
   width: 271px;
   height: 60px;
   border-radius: 50px;
@@ -45,7 +45,7 @@
   transition: all 0.2s ease-in-out;
 }
 
-.password-button {
+.entermake-button {
   width: 271px;
   height: 60px;
   border-radius: 50px;
@@ -58,12 +58,12 @@
   transition: all 0.2s ease-in-out;
 }
 
-.password-button:hover {
+.entermake-button:hover {
   background-color: rgba(72, 121, 254, 0.8);
   transform: scale(1.05);
 }
 
-.password-button-text {
+.entermake-button-text {
   margin-top: 15px;
   color: white;
   font-family: 'NunitoBlack';
@@ -71,6 +71,6 @@
   text-align: center;
 }
 
-.password-button-icon {
+.entermake-button-icon {
   margin-right: 15px;
 }

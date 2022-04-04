@@ -1,18 +1,21 @@
 /* eslint-disable no-console */
 import Row from 'react-bootstrap/Row';
 import { useNavigate } from 'react-router-dom';
+import { setGeneralPath } from '../../store/general-slice';
+import { useAppDispatch } from '../../hooks/redux-hooks';
 
 import ImportExistingCalendarIcon from '../../icons/ImportFileIcon';
 import CreateNewCalendarIcon from '../../icons/AddFileIcon';
 
 function WelcomeScreen() {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   async function clickOpenExisting() {
     const filePath: string =
       await window.electron.dialogs.openCalendarFileDialog();
     if (filePath !== '') {
-      console.log(filePath);
+      dispatch(setGeneralPath(filePath));
       navigate('/enter-password');
     }
   }
@@ -21,7 +24,7 @@ function WelcomeScreen() {
     const filePath: string =
       await window.electron.dialogs.createCalendarFileDialog();
     if (filePath !== '') {
-      console.log(filePath);
+      dispatch(setGeneralPath(filePath));
       navigate('/make-password');
     }
   }

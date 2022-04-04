@@ -5,6 +5,7 @@ import './stylesheets/App.scss';
 
 import IntroScreens from './screens/IntroScreens';
 import ScreenTypes from './common/ScreenTypes';
+import DashboardScreen from './screens/DashboardScreen';
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
           path="/make-password"
           element={<IntroScreens type={ScreenTypes.MakePassword} />}
         />
+        <Route path="/dashboard" element={<DashboardScreen />} />
       </Routes>
     </Router>
   );

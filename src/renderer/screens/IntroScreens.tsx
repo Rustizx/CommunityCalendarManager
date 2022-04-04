@@ -1,11 +1,11 @@
 import Row from 'react-bootstrap/Row';
 
-import Welcome from '../componets/intro/Welcome';
-import MakePassword from '../componets/intro/MakePassword';
-import EnterPassword from '../componets/intro/EnterPassword';
+import Welcome from '../components/intro/Welcome';
+import MakePassword from '../components/intro/MakeCalendar';
+import EnterPassword from '../components/intro/EnterCalendar';
 
-import BackButton from '../componets/intro/BackButton';
-import Footer from '../componets/Footer';
+import BackButton from '../components/intro/BackButton';
+import Footer from '../components/Footer';
 
 import ScreenTypes from '../common/ScreenTypes';
 
