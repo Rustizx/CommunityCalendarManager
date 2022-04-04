@@ -11,7 +11,6 @@ function DashboardScreen() {
       <p>{calendar.name}</p>
       <p>{calendar.dateCreated}</p>
       <p>{calendar.dateModified}</p>
-      <p>{calendar.password}</p>
       <p>{calendar.version}</p>
       <p>{calendar.families}</p>
     </div>

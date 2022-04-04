@@ -6,7 +6,6 @@ const intialCalendarState: CalendarModel = {
   dateCreated: '',
   dateModified: '',
   version: '',
-  password: '',
   families: [],
 };
 
@@ -19,7 +18,6 @@ const calendarSlice = createSlice({
       state.dateCreated = action.payload.dateCreated;
       state.dateModified = action.payload.dateModified;
       state.version = action.payload.version;
-      state.password = action.payload.password;
       state.families = action.payload.families;
     },
     setCalendarFamilies(state, action: PayloadAction<FamilyModel[]>) {
@@ -30,7 +28,6 @@ const calendarSlice = createSlice({
       state.dateCreated = intialCalendarState.dateCreated;
       state.dateModified = intialCalendarState.dateModified;
       state.version = intialCalendarState.version;
-      state.password = intialCalendarState.password;
       state.families = intialCalendarState.families;
     },
   },

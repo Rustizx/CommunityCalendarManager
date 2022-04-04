@@ -12,7 +12,6 @@ export interface CalendarModel {
   dateCreated: string;
   dateModified: string;
   version: string;
-  password: string;
   families?: FamilyModel[];
 }
 

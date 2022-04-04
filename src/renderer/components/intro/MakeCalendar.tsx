@@ -12,7 +12,7 @@ import { WriteFileType } from 'main/ipc/types/file-manager-types';
 import { setGeneralError, setGeneralPassword } from '../../store/general-slice';
 import { setCalendar } from '../../store/calendar-slice';
 import { CalendarModel } from '../../models/redux-models';
-import { fileVersion } from '../../constants';
+import { fileVersion } from '../../common/constants';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux-hooks';
 import AddIcon from '../../icons/AddIcon';
 
@@ -70,7 +70,6 @@ function MakePassword() {
         name: title,
         dateCreated: Date.now().toString(),
         dateModified: Date.now().toString(),
-        password,
         version: fileVersion,
       };
 

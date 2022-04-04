@@ -16,7 +16,7 @@ function WelcomeScreen() {
       await window.electron.dialogs.openCalendarFileDialog();
     if (filePath !== '') {
       dispatch(setGeneralPath(filePath));
-      navigate('/enter-password');
+      navigate('/enter-calendar');
     }
   }
 
@@ -25,7 +25,7 @@ function WelcomeScreen() {
       await window.electron.dialogs.createCalendarFileDialog();
     if (filePath !== '') {
       dispatch(setGeneralPath(filePath));
-      navigate('/make-password');
+      navigate('/make-calendar');
     }
   }
 

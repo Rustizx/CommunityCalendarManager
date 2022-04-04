@@ -13,7 +13,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<IntroScreens type={ScreenTypes.Welcome} />} />
         <Route
-          path="/enter-password"
+          path="/enter-calendar"
           element={<IntroScreens type={ScreenTypes.EnterPassword} />}
         />
         <Route
@@ -21,7 +21,7 @@ export default function App() {
           element={<IntroScreens type={ScreenTypes.ResetPassword} />}
         />
         <Route
-          path="/make-password"
+          path="/make-calendar"
           element={<IntroScreens type={ScreenTypes.MakePassword} />}
         />
         <Route path="/dashboard" element={<DashboardScreen />} />

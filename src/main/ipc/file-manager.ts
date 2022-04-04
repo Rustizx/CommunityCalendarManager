@@ -4,24 +4,29 @@ import {
   ImportCalendarModel,
 } from 'renderer/models/redux-models';
 import { ReadFileType, WriteFileType } from './types/file-manager-types';
+import { EncryptedFileType, encrypt, decrypt } from './service/encryption';
 
 const fs = require('fs');
 
 function readCalendarFile(fileInfo: ReadFileType): ImportCalendarModel {
   try {
-    const data: string = fs.readFileSync(fileInfo.path, 'utf8');
-    const fileData: CalendarModel = JSON.parse(data);
+    const rawData: string = fs.readFileSync(fileInfo.path, 'utf8');
+    const encryptedData: EncryptedFileType = JSON.parse(rawData);
 
-    if (fileData.password === fileInfo.password) {
+    const decryptedData: string = decrypt(encryptedData, fileInfo.password);
+
+    try {
+      const data: CalendarModel = JSON.parse(decryptedData);
       return {
         status: 'success',
-        calendar: fileData,
+        calendar: data,
+      };
+    } catch (e) {
+      return {
+        status: 'password-error',
+        calendar: undefined,
       };
     }
-    return {
-      status: 'password-error',
-      calendar: fileData,
-    };
   } catch (err) {
     return {
       status: 'file-error',
@@ -33,7 +38,15 @@ function readCalendarFile(fileInfo: ReadFileType): ImportCalendarModel {
 function writeCalendarFile(fileInfo: WriteFileType): ImportCalendarModel {
   try {
     const stringData: string = JSON.stringify(fileInfo.calendar);
-    fs.writeFileSync(fileInfo.path, stringData, { encoding: 'utf8' });
+
+    const encryptedData: EncryptedFileType = encrypt(
+      stringData,
+      fileInfo.password
+    );
+
+    const rawData: string = JSON.stringify(encryptedData);
+
+    fs.writeFileSync(fileInfo.path, rawData, { encoding: 'utf8' });
   } catch (err) {
     return {
       status: 'file-error',
