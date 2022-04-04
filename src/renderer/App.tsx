@@ -5,7 +5,7 @@ import './stylesheets/App.scss';
 
 import IntroScreens from './screens/IntroScreens';
 import ScreenTypes from './common/ScreenTypes';
-import DashboardScreen from './screens/DashboardScreen';
+import DashboardScreens from './screens/DashboardScreens';
 
 export default function App() {
   return (
@@ -24,7 +24,7 @@ export default function App() {
           path="/make-calendar"
           element={<IntroScreens type={ScreenTypes.MakePassword} />}
         />
-        <Route path="/dashboard" element={<DashboardScreen />} />
+        <Route path="/dashboard" element={<DashboardScreens />} />
       </Routes>
     </Router>
   );
