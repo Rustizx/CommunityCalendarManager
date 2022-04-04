@@ -1,25 +1,17 @@
 import { contextBridge, ipcRenderer } from 'electron';
+import { ReadFileType, WriteFileType } from './ipc/types/file-manager-types';
 
 contextBridge.exposeInMainWorld('electron', {
-  ipcRenderer: {
-    myPing() {
-      ipcRenderer.send('ipc-example', 'ping');
-    },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    on(channel: string, func: (...args: any[]) => void) {
-      const validChannels = ['ipc-example'];
-      if (validChannels.includes(channel)) {
-        // Deliberately strip event as it includes `sender`
-        ipcRenderer.on(channel, (_event, ...args) => func(...args));
-      }
-    },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    once(channel: string, func: (...args: any[]) => void) {
-      const validChannels = ['ipc-example'];
-      if (validChannels.includes(channel)) {
-        // Deliberately strip event as it includes `sender`
-        ipcRenderer.once(channel, (_event, ...args) => func(...args));
-      }
-    },
+  files: {
+    readCalendarFile: (fileInfo: ReadFileType) =>
+      ipcRenderer.invoke('files:read-calendar-file', fileInfo),
+    writeCalendarFile: (fileInfo: WriteFileType) =>
+      ipcRenderer.invoke('files:write-calendar-file', fileInfo),
+  },
+  dialogs: {
+    openCalendarFileDialog: () =>
+      ipcRenderer.invoke('dialog:open-calender-file'),
+    createCalendarFileDialog: () =>
+      ipcRenderer.invoke('dialog:create-calender-file'),
   },
 });

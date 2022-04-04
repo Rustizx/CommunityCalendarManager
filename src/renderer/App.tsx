@@ -1,49 +1,30 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import icon from '../../assets/icon.svg';
-import './App.css';
 
-const Hello = () => {
-  return (
-    <div>
-      <div className="Hello">
-        <img width="200px" alt="icon" src={icon} />
-      </div>
-      <h1>electron-react-boilerplate</h1>
-      <div className="Hello">
-        <a
-          href="https://electron-react-boilerplate.js.org/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              📚
-            </span>
-            Read our docs
-          </button>
-        </a>
-        <a
-          href="https://github.com/sponsors/electron-react-boilerplate"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              🙏
-            </span>
-            Donate
-          </button>
-        </a>
-      </div>
-    </div>
-  );
-};
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './stylesheets/App.scss';
+
+import IntroScreens from './screens/IntroScreens';
+import ScreenTypes from './common/ScreenTypes';
+import DashboardScreen from './screens/DashboardScreen';
 
 export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Hello />} />
+        <Route path="/" element={<IntroScreens type={ScreenTypes.Welcome} />} />
+        <Route
+          path="/enter-calendar"
+          element={<IntroScreens type={ScreenTypes.EnterPassword} />}
+        />
+        <Route
+          path="/reset-password"
+          element={<IntroScreens type={ScreenTypes.ResetPassword} />}
+        />
+        <Route
+          path="/make-calendar"
+          element={<IntroScreens type={ScreenTypes.MakePassword} />}
+        />
+        <Route path="/dashboard" element={<DashboardScreen />} />
       </Routes>
     </Router>
   );
