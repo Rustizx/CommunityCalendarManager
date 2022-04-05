@@ -12,7 +12,6 @@ function DashboardScreen() {
       <p>{calendar.dateCreated}</p>
       <p>{calendar.dateModified}</p>
       <p>{calendar.version}</p>
-      <p>{calendar.families}</p>
     </div>
   );
 }
