@@ -75,10 +75,10 @@ export interface CalendarModel {
   dateCreated: string;
   dateModified: string;
   version: string;
-  defaultFamilyCard?: FamilyCardModel;
-  familyCards?: FamilyCardModel[];
-  defaultBusinessCard?: BusinessCardModel;
-  businessCards?: BusinessCardModel[];
-  defaultClubCard?: ClubCardModel;
-  clubCards?: ClubCardModel[];
+  defaultFamilyCard: FamilyCardModel;
+  familyCards: FamilyCardModel[];
+  defaultBusinessCard: BusinessCardModel;
+  businessCards: BusinessCardModel[];
+  defaultClubCard: ClubCardModel;
+  clubCards: ClubCardModel[];
 }

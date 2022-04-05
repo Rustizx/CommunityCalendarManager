@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
+  defaultBusiness,
+  defaultClub,
+  defaultFamily,
+} from '../models/model-defaults';
+import {
   BusinessCardModel,
   CalendarModel,
   ClubCardModel,
@@ -11,77 +16,11 @@ const intialCalendarState: CalendarModel = {
   dateCreated: '',
   dateModified: '',
   version: '',
-  defaultFamilyCard: {
-    id: '',
-    family_name: '',
-    contacts: [],
-    contactDetails: {
-      homePhone: '',
-      workPhone: '',
-      email: '',
-    },
-    address: {
-      streetNumber: '',
-      streetName: '',
-      city: '',
-      province: '',
-      postalCode: '',
-    },
-    calendarEvents: [],
-    order: {
-      amountOfCalendarsPurchased: 0,
-      amountDonated: 0,
-      didDonated: false,
-    },
-  },
+  defaultFamilyCard: defaultFamily,
   familyCards: [],
-  defaultBusinessCard: {
-    id: '',
-    business_name: '',
-    contacts: [],
-    contactDetails: {
-      homePhone: '',
-      workPhone: '',
-      email: '',
-    },
-    address: {
-      streetNumber: '',
-      streetName: '',
-      city: '',
-      province: '',
-      postalCode: '',
-    },
-    calendarEvents: [],
-    order: {
-      amountOfCalendarsPurchased: 0,
-      amountDonated: 0,
-      didDonated: false,
-    },
-  },
+  defaultBusinessCard: defaultBusiness,
   businessCards: [],
-  defaultClubCard: {
-    id: '',
-    club_name: '',
-    contacts: [],
-    contactDetails: {
-      homePhone: '',
-      workPhone: '',
-      email: '',
-    },
-    address: {
-      streetNumber: '',
-      streetName: '',
-      city: '',
-      province: '',
-      postalCode: '',
-    },
-    calendarEvents: [],
-    order: {
-      amountOfCalendarsPurchased: 0,
-      amountDonated: 0,
-      didDonated: false,
-    },
-  },
+  defaultClubCard: defaultClub,
   clubCards: [],
 };
 

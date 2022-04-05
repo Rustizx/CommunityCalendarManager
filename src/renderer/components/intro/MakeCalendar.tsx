@@ -9,6 +9,11 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
 import { WriteFileType } from 'main/ipc/types/file-manager-types';
+import {
+  defaultBusiness,
+  defaultClub,
+  defaultFamily,
+} from '../../models/model-defaults';
 import { setGeneralError, setGeneralPassword } from '../../store/general-slice';
 import { setCalendar } from '../../store/calendar-slice';
 import { CalendarModel } from '../../models/redux-models';
@@ -71,6 +76,12 @@ function MakePassword() {
         dateCreated: Date.now().toString(),
         dateModified: Date.now().toString(),
         version: fileVersion,
+        defaultFamilyCard: defaultFamily,
+        familyCards: [],
+        defaultBusinessCard: defaultBusiness,
+        businessCards: [],
+        defaultClubCard: defaultClub,
+        clubCards: [],
       };
 
       const fileInfo: WriteFileType = {
