@@ -29,6 +29,18 @@ function WelcomeScreen() {
     }
   }
 
+  const onKeyDownOpenExistingHandler = (e: { keyCode: number }) => {
+    if (e.keyCode === 13) {
+      clickOpenExisting();
+    }
+  };
+
+  const onKeyDownCreateNewHandler = (e: { keyCode: number }) => {
+    if (e.keyCode === 13) {
+      clickCreateNew();
+    }
+  };
+
   return (
     <div className="welcome-body">
       <Row>
@@ -44,8 +56,8 @@ function WelcomeScreen() {
           role="button"
           className="welcome-button"
           onClick={() => clickOpenExisting()}
-          onKeyDown={() => clickOpenExisting()}
-          tabIndex={-1}
+          onKeyDown={onKeyDownOpenExistingHandler}
+          tabIndex={0}
         >
           <ImportExistingCalendarIcon
             className="welcome-button-icon welcome-button-icon-import"
@@ -58,8 +70,8 @@ function WelcomeScreen() {
           role="button"
           className="welcome-button"
           onClick={() => clickCreateNew()}
-          onKeyDown={() => clickCreateNew()}
-          tabIndex={-1}
+          onKeyDown={onKeyDownCreateNewHandler}
+          tabIndex={0}
         >
           <CreateNewCalendarIcon
             className="welcome-button-icon"

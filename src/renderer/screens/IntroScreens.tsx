@@ -7,7 +7,7 @@ import EnterPassword from '../components/intro/EnterCalendar';
 import BackButton from '../components/intro/BackButton';
 import Footer from '../components/Footer';
 
-import ScreenTypes from '../common/ScreenTypes';
+import { IntroScreenTypes } from '../common/ScreenTypes';
 
 interface IntroScreensProps {
   type: string;
@@ -17,12 +17,12 @@ function IntroScreens(props: IntroScreensProps) {
   const { type } = props;
   let isBackButtonVisable = true;
   let child = <></>;
-  if (type === ScreenTypes.Welcome) {
+  if (type === IntroScreenTypes.Welcome) {
     isBackButtonVisable = false;
     child = <Welcome />;
-  } else if (type === ScreenTypes.MakePassword) {
+  } else if (type === IntroScreenTypes.MakePassword) {
     child = <MakePassword />;
-  } else if (type === ScreenTypes.EnterPassword) {
+  } else if (type === IntroScreenTypes.EnterPassword) {
     child = <EnterPassword />;
   }
 
@@ -43,7 +43,7 @@ function IntroScreens(props: IntroScreensProps) {
           <div className="intro-container">{child}</div>
         </Row>
       </div>
-      <Footer />
+      <Footer className="" />
     </div>
   );
 }

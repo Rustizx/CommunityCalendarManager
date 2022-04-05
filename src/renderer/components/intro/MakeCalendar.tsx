@@ -119,6 +119,12 @@ function MakePassword() {
     setLoading(false);
   }
 
+  const onKeyDownHandler = (e: { keyCode: number }) => {
+    if (e.keyCode === 13) {
+      createCalendar();
+    }
+  };
+
   return (
     <div className="entermake-body">
       <Row>
@@ -148,8 +154,8 @@ function MakePassword() {
             role="button"
             className="entermake-button"
             onClick={() => createCalendar()}
-            onKeyDown={() => createCalendar()}
-            tabIndex={-1}
+            onKeyDown={onKeyDownHandler}
+            tabIndex={0}
           >
             <AddIcon className="entermake-button-icon" width={28} height={32} />
             <p className="entermake-button-text">Create Calendar</p>

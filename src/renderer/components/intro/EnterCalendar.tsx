@@ -58,6 +58,12 @@ function EnterPassword() {
     setLoading(false);
   }
 
+  const onKeyDownHandler = (e: { keyCode: number }) => {
+    if (e.keyCode === 13) {
+      openCalendar();
+    }
+  };
+
   return (
     <div className="entermake-body">
       <Row>
@@ -88,8 +94,8 @@ function EnterPassword() {
             role="button"
             className="entermake-button"
             onClick={() => openCalendar()}
-            onKeyDown={() => openCalendar()}
-            tabIndex={-1}
+            onKeyDown={onKeyDownHandler}
+            tabIndex={0}
             onMouseEnter={() => setVisible(true)}
             onMouseLeave={() => setVisible(false)}
           >
