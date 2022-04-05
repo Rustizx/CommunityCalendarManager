@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Col from 'react-bootstrap/Col';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
-import SettingsIcon from 'renderer/icons/SettingsIcon';
+import SettingsIcon from '../icons/SettingsIcon';
 import Footer from '../components/Footer';
 
 import { DashboardScreensTypes as ScreenTypes } from '../common/ScreenTypes';
