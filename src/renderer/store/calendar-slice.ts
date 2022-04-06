@@ -3,6 +3,7 @@ import {
   defaultBusiness,
   defaultClub,
   defaultFamily,
+  demoFamilyCard,
 } from '../models/model-defaults';
 import {
   BusinessCardModel,
@@ -58,6 +59,9 @@ const calendarSlice = createSlice({
     setClubCards(state, action: PayloadAction<ClubCardModel[]>) {
       state.clubCards = action.payload;
     },
+    addDemo(state) {
+      state.familyCards = [demoFamilyCard];
+    },
     resetCalendar(state) {
       state.name = intialCalendarState.name;
       state.dateCreated = intialCalendarState.dateCreated;
@@ -81,6 +85,7 @@ export const {
   setFamilyCards,
   setBusinessCards,
   setClubCards,
+  addDemo,
   resetCalendar,
 } = calendarSlice.actions;
 

@@ -1,0 +1,26 @@
+.card-container {
+  margin-left: 50px;
+  margin-right: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-options {
+  display: flex;
+  align-self: end;
+  position: relative;
+  top: -68px;
+}
+
+.card-options-items {
+  margin-left: 10px;
+}
+
+.card-table {
+  position: relative;
+  top: -40px;
+}
+
+.card-modal {
+  width: 1000px;
+}

@@ -15,10 +15,8 @@ export interface CalendarEventModel {
   type: string;
   date: string;
 }
-
 export interface AddressModel {
-  streetNumber: string;
-  streetName: string;
+  addressLine: string;
   city: string;
   province: string;
   postalCode: string;

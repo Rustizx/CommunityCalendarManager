@@ -12,57 +12,88 @@ import { useAppSelector } from '../../hooks/redux-hooks';
 export default function AnalyticsScreen() {
   const calendar = useAppSelector((state) => state.calendar);
 
-  const [families, setFamilies] = useState(0);
-  const [businesses, setBusinesses] = useState(0);
-  const [clubs, setClubs] = useState(0);
-  const [orders, setOrders] = useState(0);
-  const [donations, setDonations] = useState(0);
-  const [calendarEvents, setCalendarEvents] = useState(0);
-
-  function updateStats() {
-    setFamilies(calendar.familyCards.length);
-    setBusinesses(calendar.businessCards.length);
-    setClubs(calendar.clubCards.length);
+  function findNumberOfOrders() {
+    let ord = 0;
+    calendar.familyCards.forEach((e) => {
+      ord += e.order.amountOfCalendarsPurchased;
+    });
+    calendar.businessCards.forEach((e) => {
+      ord += e.order.amountOfCalendarsPurchased;
+    });
+    calendar.clubCards.forEach((e) => {
+      ord += e.order.amountOfCalendarsPurchased;
+    });
+    return ord;
   }
 
-  updateStats();
+  function findNumberOfDonations() {
+    let don = 0;
+    calendar.familyCards.forEach((e) => {
+      don += e.order.amountDonated;
+    });
+    calendar.businessCards.forEach((e) => {
+      don += e.order.amountDonated;
+    });
+    calendar.clubCards.forEach((e) => {
+      don += e.order.amountDonated;
+    });
+    return don;
+  }
+
+  function findNumberOfCalendarEvents() {
+    let events = 0;
+    calendar.familyCards.forEach((e) => {
+      events += e.calendarEvents.length;
+    });
+    calendar.businessCards.forEach((e) => {
+      events += e.calendarEvents.length;
+    });
+    calendar.clubCards.forEach((e) => {
+      events += e.calendarEvents.length;
+    });
+    return events;
+  }
+
+  const [orders] = useState(findNumberOfOrders());
+  const [donations] = useState(findNumberOfDonations());
+  const [calendarEvents] = useState(findNumberOfCalendarEvents());
 
   return (
     <div className="analytics-screen">
       <div className="analytics-section">
         <AnalyticCard
           title="Families"
-          stats={families}
+          stats={`${calendar.familyCards.length}`}
           icon={<FamiliesIcon width={42} height={34} className="" />}
           className="analytics-blue"
         />
         <AnalyticCard
           title="Businesses"
-          stats={businesses}
+          stats={`${calendar.businessCards.length}`}
           icon={<BusinessesIcon width={27} height={36} className="" />}
           className="analytics-blue"
         />{' '}
         <AnalyticCard
           title="Clubs"
-          stats={clubs}
+          stats={`${calendar.clubCards.length}`}
           icon={<ClubsIcon width={40} height={32} className="" />}
           className="analytics-blue"
         />
         <AnalyticCard
           title="Orders"
-          stats={orders}
+          stats={`${orders}`}
           icon={<OrdersIcon width={28} height={38} className="" />}
           className="analytics-green"
         />{' '}
         <AnalyticCard
           title="Donations"
-          stats={donations}
+          stats={`$${donations}`}
           icon={<DonationsIcon width={38} height={34} className="" />}
           className="analytics-purple"
         />{' '}
         <AnalyticCard
           title="Calendar Events"
-          stats={calendarEvents}
+          stats={`${calendarEvents}`}
           icon={<CalendarEventsIcon width={31} height={36} className="" />}
           className="analytics-orange"
         />

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Col from 'react-bootstrap/Col';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
-import AnalyticsScreen from 'renderer/components/dashboard/Analytics';
+import DashboardSwitcher from '../components/dashboard/DashboardSwitcher';
 import SettingsIcon from '../icons/SettingsIcon';
 import Footer from '../components/Footer';
 
@@ -11,7 +11,7 @@ import { DashboardScreensTypes as ScreenTypes } from '../common/ScreenTypes';
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hooks';
 import VerticalLine from '../icons/VerticalLine';
 import { resetGeneral } from '../store/general-slice';
-import { resetCalendar } from '../store/calendar-slice';
+import { addDemo, resetCalendar } from '../store/calendar-slice';
 import BreadCrumb from '../components/dashboard/elements/Breadcrums';
 
 function DashboardScreens() {
@@ -34,6 +34,10 @@ function DashboardScreens() {
 
     setScreen(screenType);
   };
+
+  function addDemoState() {
+    dispatch(addDemo());
+  }
 
   function goBack() {
     dispatch(resetGeneral());
@@ -142,6 +146,9 @@ function DashboardScreens() {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
+              <Dropdown.Item onClick={() => addDemoState()}>
+                <span className="navbar-sublink">Add Demo State</span>
+              </Dropdown.Item>
               <Dropdown.Item onClick={() => goBack()}>
                 <span className="navbar-sublink">Exit Calendar</span>
               </Dropdown.Item>
@@ -151,7 +158,7 @@ function DashboardScreens() {
       </div>
       <BreadCrumb screen={screen} />
       <div className="dashboard-container">
-        {screen === ScreenTypes.Analytics ? <AnalyticsScreen /> : <></>}
+        <DashboardSwitcher screen={screen} />
       </div>
       <Footer className="dashboard-footer-text" />
     </div>

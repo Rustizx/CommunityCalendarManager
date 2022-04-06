@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 interface AnalyticCardProps {
   className: string;
   title: string;
-  stats: number;
+  stats: string;
   icon: ReactNode;
 }
 
