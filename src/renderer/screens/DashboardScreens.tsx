@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Col from 'react-bootstrap/Col';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
+import AnalyticsScreen from 'renderer/components/dashboard/Analytics';
 import SettingsIcon from '../icons/SettingsIcon';
 import Footer from '../components/Footer';
 
@@ -11,6 +12,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/redux-hooks';
 import VerticalLine from '../icons/VerticalLine';
 import { resetGeneral } from '../store/general-slice';
 import { resetCalendar } from '../store/calendar-slice';
+import BreadCrumb from '../components/dashboard/elements/Breadcrums';
 
 function DashboardScreens() {
   const navigate = useNavigate();
@@ -146,6 +148,10 @@ function DashboardScreens() {
             </Dropdown.Menu>
           </Dropdown>
         </Col>
+      </div>
+      <BreadCrumb screen={screen} />
+      <div className="dashboard-container">
+        {screen === ScreenTypes.Analytics ? <AnalyticsScreen /> : <></>}
       </div>
       <Footer className="dashboard-footer-text" />
     </div>

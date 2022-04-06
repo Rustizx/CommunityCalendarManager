@@ -6,9 +6,9 @@ export enum IntroScreenTypes {
 }
 
 export enum DashboardScreensTypes {
-  Analytics = 'analytics',
-  FamilyCards = 'familyCards',
-  BusinessCards = 'businessCards',
-  ClubCards = 'clubCards',
-  List = 'list',
+  Analytics = 'Analytics',
+  FamilyCards = 'Family Cards',
+  BusinessCards = 'Business Cards',
+  ClubCards = 'Club Cards',
+  List = 'List',
 }

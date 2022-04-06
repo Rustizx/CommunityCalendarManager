@@ -1,5 +1,7 @@
+@import './dashboards/analytics.scss';
+
 .dashboard-background {
-  color: white;
+  color: black;
   position: absolute;
   top: 0;
   left: 0;
@@ -8,7 +10,13 @@
   background: #f3f3f3;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: start;
+}
+
+.dashboard-container {
+  position: absolute;
+  top: 200px;
+  width: 98%;
 }
 
 .navbar-background {
@@ -120,10 +128,42 @@
   display: none !important;
 }
 
+.breadcrumb {
+  position: absolute;
+  top: 100px;
+  left: 60px;
+  display: flex;
+  flex-direction: column;
+}
+
+.breadcrumb-container {
+  margin-top: 10px;
+}
+
+.breadcrumb-title {
+  font-family: 'NunitoExtraBold';
+  font-size: 34px;
+  color: black;
+  opacity: 70%;
+}
+
+.breadcrumb-icon {
+  color: black;
+  opacity: 50%;
+  margin-right: 10px;
+}
+
+.breadcrumb-text {
+  font-family: 'NunitoBold';
+  font-size: 16px;
+  color: black;
+  opacity: 50%;
+  margin-right: 10px;
+}
+
 .dashboard-footer-text {
   color: #769bfe;
   font-family: 'NunitoSemiBold';
-  text-align: center;
   font-size: 14px;
 }
 
