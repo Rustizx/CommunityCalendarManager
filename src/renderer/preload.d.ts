@@ -7,10 +7,15 @@ declare global {
       files: {
         readCalendarFile(fileInfo: ReadFileType): ImportCalendarModel;
         writeCalendarFile(fileInfo: WriteFileType): ImportCalendarModel;
+        writeFamilyCardPDF(fileInfo: WriteFileType): string;
+        writeBusinessCardPDF(fileInfo: WriteFileType): string;
+        writeClubCardPDF(fileInfo: WriteFileType): string;
+        readLegacyCalendarFile(fileInfo: ReadFileType): ImportCalendarModel;
       };
       dialogs: {
         openCalendarFileDialog(): string;
         createCalendarFileDialog(): string;
+        createPDFFileDialog(): string;
       };
     };
   }

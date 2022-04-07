@@ -17,15 +17,15 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux-hooks';
 import {
   CalendarEventModel,
   ContactModel,
-  FamilyCardModel,
+  ClubCardModel,
 } from '../../models/redux-models';
-import { addCard, setDefaultFamily } from '../../store/calendar-slice';
+import { addCard, setDefaultClub } from '../../store/calendar-slice';
 import { months, options, provinces } from '../../common/constants';
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const schema = yup.object().shape({
-  family_name: yup.string().required(),
+  club_name: yup.string().required(),
   contacts: yup.array().of(
     yup.object().shape({
       firstName: yup.string().required(),
@@ -58,33 +58,31 @@ function generateUniqSerial(): string {
   });
 }
 
-export default function FamilyCardsTable() {
+export default function ClubCardsTable() {
   const calendar = useAppSelector((state) => state.calendar);
   const general = useAppSelector((state) => state.general);
   const dispatch = useAppDispatch();
 
   const [searchBox, setSearchBox] = useState('');
-  const [results, setResults] = useState<FamilyCardModel[]>(
-    calendar.familyCards
-  );
-  const [selectedFamily, setSelectedFamily] = useState<FamilyCardModel>(
-    calendar.defaultFamilyCard
+  const [results, setResults] = useState<ClubCardModel[]>(calendar.clubCards);
+  const [selectedClub, setSelectedClub] = useState<ClubCardModel>(
+    calendar.defaultClubCard
   );
 
-  let fuse = new Fuse(calendar.familyCards, {
+  let fuse = new Fuse(calendar.clubCards, {
     shouldSort: true,
     findAllMatches: true,
-    keys: ['family_name', 'contacts[0].firstName', 'contacts[0].lastName'],
+    keys: ['club_name', 'contacts[0].firstName', 'contacts[0].lastName'],
   });
 
-  const [editFamily, setEditFamily] = useState(false);
+  const [editClub, setEditClub] = useState(false);
 
-  function expandFamilyCard(current: FamilyCardModel) {
+  function expandClubCard(current: ClubCardModel) {
     const calendarEventsList: CalendarEventModel[] = [];
     const contactsList: ContactModel[] = [];
     const defaultCalendarEvents: CalendarEventModel =
-      calendar.defaultFamilyCard.calendarEvents[0];
-    const defaultContact: ContactModel = calendar.defaultFamilyCard.contacts[0];
+      calendar.defaultClubCard.calendarEvents[0];
+    const defaultContact: ContactModel = calendar.defaultClubCard.contacts[0];
     for (let i = 0; i < 40; i += 1) {
       if (current.calendarEvents[i] !== undefined) {
         calendarEventsList.push(current.calendarEvents[i]);
@@ -99,9 +97,9 @@ export default function FamilyCardsTable() {
         contactsList.push(defaultContact);
       }
     }
-    const newCard: FamilyCardModel = {
+    const newCard: ClubCardModel = {
       id: current.id,
-      family_name: current.family_name,
+      club_name: current.club_name,
       contacts: contactsList,
       contactDetails: current.contactDetails,
       address: current.address,
@@ -111,7 +109,7 @@ export default function FamilyCardsTable() {
     return newCard;
   }
 
-  function unexpandFamilyCard(current: FamilyCardModel) {
+  function unexpandClubCard(current: ClubCardModel) {
     const calendarEventsList: CalendarEventModel[] = [];
     const contactsList: ContactModel[] = [];
     for (let i = 0; i < current.calendarEvents.length; i += 1) {
@@ -130,9 +128,9 @@ export default function FamilyCardsTable() {
         contactsList.push(current.contacts[i]);
       }
     }
-    const newCard: FamilyCardModel = {
+    const newCard: ClubCardModel = {
       id: current.id,
-      family_name: current.family_name,
+      club_name: current.club_name,
       contacts: contactsList,
       contactDetails: current.contactDetails,
       address: current.address,
@@ -142,29 +140,29 @@ export default function FamilyCardsTable() {
     return newCard;
   }
 
-  function handleOpenAddFamily() {
-    setSelectedFamily(expandFamilyCard(calendar.defaultFamilyCard));
-    setEditFamily(true);
+  function handleOpenAddClub() {
+    setSelectedClub(expandClubCard(calendar.defaultClubCard));
+    setEditClub(true);
   }
 
-  function handleOpenEditFamily(id: string) {
-    const findFamily = calendar.familyCards.find((x) => {
+  function handleOpenEditClub(id: string) {
+    const findClub = calendar.clubCards.find((x) => {
       return x.id === id;
     });
-    if (findFamily !== undefined) {
-      setSelectedFamily(expandFamilyCard(findFamily));
-      setEditFamily(true);
+    if (findClub !== undefined) {
+      setSelectedClub(expandClubCard(findClub));
+      setEditClub(true);
     }
   }
 
   function searchTable(value: string) {
     setSearchBox(value);
     if (value === '') {
-      setResults(calendar.familyCards);
-      fuse = new Fuse(calendar.familyCards, {
+      setResults(calendar.clubCards);
+      fuse = new Fuse(calendar.clubCards, {
         shouldSort: true,
         findAllMatches: true,
-        keys: ['family_name', 'contacts[0].firstName', 'contacts[0].lastName'],
+        keys: ['club_name', 'contacts[0].firstName', 'contacts[0].lastName'],
       });
     } else {
       const re = fuse.search(value);
@@ -178,35 +176,35 @@ export default function FamilyCardsTable() {
     searchTable('');
   }
 
-  function handleCloseEditFamily() {
-    setEditFamily(false);
+  function handleCloseEditClub() {
+    setEditClub(false);
     updateTable();
   }
 
-  function handleChangeFamily(values: FamilyCardModel) {
-    const cleanedFamilyCard = unexpandFamilyCard(values);
-    for (let l = 0; l < cleanedFamilyCard.contacts.length; l += 1) {
-      if (cleanedFamilyCard.contacts[l].lastName === '') {
-        cleanedFamilyCard.contacts[l].lastName = cleanedFamilyCard.family_name;
+  function handleChangeClub(values: ClubCardModel) {
+    const cleanedClubCard = unexpandClubCard(values);
+    for (let l = 0; l < cleanedClubCard.contacts.length; l += 1) {
+      if (cleanedClubCard.contacts[l].lastName === '') {
+        cleanedClubCard.contacts[l].lastName = cleanedClubCard.club_name;
       }
     }
-    if (cleanedFamilyCard.id === '') {
-      cleanedFamilyCard.id = generateUniqSerial();
+    if (cleanedClubCard.id === '') {
+      cleanedClubCard.id = generateUniqSerial();
     }
-    if (cleanedFamilyCard.address.province === '') {
-      cleanedFamilyCard.address.province = provinces[0].value;
+    if (cleanedClubCard.address.province === '') {
+      cleanedClubCard.address.province = provinces[0].value;
     }
-    if (parseInt(cleanedFamilyCard.order.amountDonated, 10) > 0) {
-      cleanedFamilyCard.order.didDonated = true;
+    if (parseInt(cleanedClubCard.order.amountDonated, 10) > 0) {
+      cleanedClubCard.order.didDonated = true;
     }
-    const addFamily = calendar.familyCards.filter((x) => {
-      return x.id !== cleanedFamilyCard.id;
+    const addClub = calendar.clubCards.filter((x) => {
+      return x.id !== cleanedClubCard.id;
     });
-    addFamily.push(cleanedFamilyCard);
+    addClub.push(cleanedClubCard);
 
     const tempCalendar = {
       ...calendar,
-      familyCards: addFamily,
+      clubCards: addClub,
     };
 
     const calendarWrite: WriteCalendarModel = {
@@ -215,7 +213,7 @@ export default function FamilyCardsTable() {
       password: general.password,
     };
     dispatch(addCard(calendarWrite));
-    handleCloseEditFamily();
+    handleCloseEditClub();
   }
 
   const [count, setCount] = useState(3);
@@ -237,13 +235,13 @@ export default function FamilyCardsTable() {
   };
 
   function handleDelete(famID: string) {
-    const newFamilies = calendar.familyCards.filter((x) => {
+    const newFamilies = calendar.clubCards.filter((x) => {
       return x.id !== famID;
     });
 
     const tempCalendar = {
       ...calendar,
-      familyCards: newFamilies,
+      clubCards: newFamilies,
     };
 
     const calendarWrite: WriteCalendarModel = {
@@ -252,18 +250,18 @@ export default function FamilyCardsTable() {
       password: general.password,
     };
     dispatch(addCard(calendarWrite));
-    handleCloseEditFamily();
+    handleCloseEditClub();
   }
 
-  function handleSetDefault(fam: FamilyCardModel) {
-    dispatch(setDefaultFamily(fam));
+  function handleSetDefault(fam: ClubCardModel) {
+    dispatch(setDefaultClub(fam));
   }
 
   async function clickSavePDF() {
     const filePath: string =
       await window.electron.dialogs.createPDFFileDialog();
     if (filePath !== '') {
-      const result: string = await window.electron.files.writeFamilyCardPDF({
+      const result: string = await window.electron.files.writeClubCardPDF({
         path: filePath,
         password: '',
         calendar,
@@ -273,7 +271,7 @@ export default function FamilyCardsTable() {
   }
 
   const dateTable = (
-    values: FamilyCardModel,
+    values: ClubCardModel,
     handleChange:
       | ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
       | undefined,
@@ -364,7 +362,7 @@ export default function FamilyCardsTable() {
           <Button
             className="card-options-items"
             variant="primary"
-            onClick={() => handleOpenAddFamily()}
+            onClick={() => handleOpenAddClub()}
           >
             Add New
           </Button>
@@ -387,7 +385,7 @@ export default function FamilyCardsTable() {
         <Table className="card-table" striped bordered hover size="sm">
           <thead>
             <tr>
-              <th>Family Name</th>
+              <th>Club Name</th>
               <th>Name</th>
               <th>Phone</th>
               <th>Address</th>
@@ -397,24 +395,24 @@ export default function FamilyCardsTable() {
             </tr>
           </thead>
           <tbody>
-            {results.map((family) => {
+            {results.map((Club) => {
               return (
-                <tr key={family.id}>
-                  <td>{family.family_name}</td>
-                  <td>{`${family.contacts[0].firstName} ${family.contacts[0].lastName}`}</td>
+                <tr key={Club.id}>
+                  <td>{Club.club_name}</td>
+                  <td>{`${Club.contacts[0].firstName} ${Club.contacts[0].lastName}`}</td>
                   <td>
-                    {family.contactDetails.homePhone.replace(
+                    {Club.contactDetails.homePhone.replace(
                       /(\d{3})(\d{3})(\d{4})/,
                       '$1-$2-$3'
                     )}
                   </td>
-                  <td>{`${family.address.addressLine}, ${family.address.city}, ${family.address.province}`}</td>
-                  <td>{`${family.calendarEvents.length}`}</td>
-                  <td>{`${family.order.amountOfCalendarsPurchased}`}</td>
+                  <td>{`${Club.address.addressLine}, ${Club.address.city}, ${Club.address.province}`}</td>
+                  <td>{`${Club.calendarEvents.length}`}</td>
+                  <td>{`${Club.order.amountOfCalendarsPurchased}`}</td>
                   <td>
                     <Button
                       id="dropdown-split-variants-primary"
-                      onClick={() => handleOpenEditFamily(family.id)}
+                      onClick={() => handleOpenEditClub(Club.id)}
                       variant="primary"
                       style={{ height: '35px' }}
                     >
@@ -428,8 +426,8 @@ export default function FamilyCardsTable() {
         </Table>
       </div>
       <Modal
-        show={editFamily}
-        onHide={() => handleCloseEditFamily()}
+        show={editClub}
+        onHide={() => handleCloseEditClub()}
         fullscreen
         dialogClassName="card-modal"
         backdrop="static"
@@ -437,16 +435,16 @@ export default function FamilyCardsTable() {
       >
         <Modal.Header closeButton>
           <Modal.Title className="card-title">
-            {selectedFamily.family_name !== ''
-              ? `Editing the ${selectedFamily.family_name} Family`
-              : `Adding a New Family`}
+            {selectedClub.club_name !== ''
+              ? `Editing the ${selectedClub.club_name} Club`
+              : `Adding a New Club`}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Formik
             validationSchema={schema}
             onSubmit={(values) => console.log(values)}
-            initialValues={selectedFamily}
+            initialValues={selectedClub}
           >
             {({
               setFieldValue,
@@ -469,14 +467,14 @@ export default function FamilyCardsTable() {
                       className="form-component"
                       controlId="validationFormik01"
                     >
-                      <Form.Label className="form-text">Family Name</Form.Label>
+                      <Form.Label className="form-text">Club Name</Form.Label>
                       <Form.Control
                         type="text"
-                        name="family_name"
-                        placeholder="Family Name"
-                        value={values.family_name}
+                        name="club_name"
+                        placeholder="Club Name"
+                        value={values.club_name}
                         onChange={handleChange}
-                        isInvalid={!!errors.family_name}
+                        isInvalid={!!errors.club_name}
                       />
                     </Form.Group>
                     <Form.Group
@@ -548,7 +546,7 @@ export default function FamilyCardsTable() {
                           placeholder="Last Name"
                           value={
                             values.contacts[0].lastName === ''
-                              ? values.family_name
+                              ? values.club_name
                               : values.contacts[0].lastName
                           }
                           onChange={handleChange}
@@ -587,7 +585,7 @@ export default function FamilyCardsTable() {
                           placeholder="Last Name"
                           value={
                             values.contacts[1].lastName === ''
-                              ? values.family_name
+                              ? values.club_name
                               : values.contacts[1].lastName
                           }
                           onChange={handleChange}
@@ -755,7 +753,7 @@ export default function FamilyCardsTable() {
                   <Col md="2">
                     <Button
                       type="submit"
-                      onClick={() => handleChangeFamily(values)}
+                      onClick={() => handleChangeClub(values)}
                       style={{ width: '100%' }}
                     >
                       Submit
@@ -772,12 +770,12 @@ export default function FamilyCardsTable() {
                       Reset
                     </Button>
                   </Col>
-                  {selectedFamily.id === '' && (
+                  {selectedClub.id === '' && (
                     <Col md="1">
                       <Button
                         type="button"
                         variant="outline-info"
-                        onClick={() => handleSetDefault(selectedFamily)}
+                        onClick={() => handleSetDefault(selectedClub)}
                         style={{ width: '100%' }}
                       >
                         Set Default
@@ -788,7 +786,7 @@ export default function FamilyCardsTable() {
                     <Button
                       type="button"
                       variant="outline-danger"
-                      onClick={() => handleDelete(selectedFamily.id)}
+                      onClick={() => handleDelete(selectedClub.id)}
                       style={{ width: '100%' }}
                     >
                       Delete

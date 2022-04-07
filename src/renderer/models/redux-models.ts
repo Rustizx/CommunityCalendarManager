@@ -10,10 +10,14 @@ export interface GeneralModel {
   error: string;
 }
 
+export interface DateModel {
+  month: string;
+  day: string;
+}
 export interface CalendarEventModel {
   name: string;
   type: string;
-  date: string;
+  date: DateModel;
 }
 export interface AddressModel {
   addressLine: string;
@@ -33,8 +37,8 @@ export interface ContactModel {
 }
 
 export interface OrderModel {
-  amountOfCalendarsPurchased: number;
-  amountDonated: number;
+  amountOfCalendarsPurchased: string;
+  amountDonated: string;
   didDonated: boolean;
 }
 

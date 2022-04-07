@@ -15,13 +15,13 @@ export default function AnalyticsScreen() {
   function findNumberOfOrders() {
     let ord = 0;
     calendar.familyCards.forEach((e) => {
-      ord += e.order.amountOfCalendarsPurchased;
+      ord += parseInt(e.order.amountOfCalendarsPurchased, 10);
     });
     calendar.businessCards.forEach((e) => {
-      ord += e.order.amountOfCalendarsPurchased;
+      ord += parseInt(e.order.amountOfCalendarsPurchased, 10);
     });
     calendar.clubCards.forEach((e) => {
-      ord += e.order.amountOfCalendarsPurchased;
+      ord += parseInt(e.order.amountOfCalendarsPurchased, 10);
     });
     return ord;
   }
@@ -29,13 +29,13 @@ export default function AnalyticsScreen() {
   function findNumberOfDonations() {
     let don = 0;
     calendar.familyCards.forEach((e) => {
-      don += e.order.amountDonated;
+      don += parseInt(e.order.amountDonated, 10);
     });
     calendar.businessCards.forEach((e) => {
-      don += e.order.amountDonated;
+      don += parseInt(e.order.amountDonated, 10);
     });
     calendar.clubCards.forEach((e) => {
-      don += e.order.amountDonated;
+      don += parseInt(e.order.amountDonated, 10);
     });
     return don;
   }

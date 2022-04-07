@@ -3,15 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import Col from 'react-bootstrap/Col';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
+import { WriteCalendarModel } from '../models/add-models';
+import CalendarService from '../services/calendar-service';
+import {
+  BusinessCardModel,
+  FamilyCardModel,
+  ImportCalendarModel,
+} from '../models/redux-models';
 import DashboardSwitcher from '../components/dashboard/DashboardSwitcher';
 import SettingsIcon from '../icons/SettingsIcon';
-import Footer from '../components/Footer';
 
 import { DashboardScreensTypes as ScreenTypes } from '../common/ScreenTypes';
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hooks';
 import VerticalLine from '../icons/VerticalLine';
 import { resetGeneral } from '../store/general-slice';
-import { addDemo, resetCalendar } from '../store/calendar-slice';
+import { addCard, resetCalendar } from '../store/calendar-slice';
 import BreadCrumb from '../components/dashboard/elements/Breadcrums';
 
 function DashboardScreens() {
@@ -20,6 +26,7 @@ function DashboardScreens() {
   const [screen, setScreen] = useState(ScreenTypes.Analytics);
   const [onCards, setOnCards] = useState(false);
   const calendar = useAppSelector((state) => state.calendar);
+  const general = useAppSelector((state) => state.general);
 
   const changeScreen = (screenType: ScreenTypes) => {
     if (screenType === ScreenTypes.FamilyCards) {
@@ -35,8 +42,39 @@ function DashboardScreens() {
     setScreen(screenType);
   };
 
-  function addDemoState() {
-    dispatch(addDemo());
+  async function addLegacyCards() {
+    const filePath: string =
+      await window.electron.dialogs.openCalendarFileDialog();
+    const legacyCalendar: ImportCalendarModel =
+      await CalendarService.readLegacyCalendarFile(filePath);
+
+    const addFamily: FamilyCardModel[] = [];
+    const addBusiness: BusinessCardModel[] = [];
+
+    if (legacyCalendar.calendar !== undefined) {
+      for (let x = 0; x < legacyCalendar.calendar.familyCards.length; x += 1) {
+        addFamily.push(legacyCalendar.calendar.familyCards[x]);
+      }
+      for (
+        let x = 0;
+        x < legacyCalendar.calendar.businessCards.length;
+        x += 1
+      ) {
+        addBusiness.push(legacyCalendar.calendar.businessCards[x]);
+      }
+    }
+    const tempCalendar = {
+      ...calendar,
+      familyCards: addFamily,
+      businessCards: addBusiness,
+    };
+
+    const calendarWrite: WriteCalendarModel = {
+      calendar: tempCalendar,
+      path: general.path,
+      password: general.password,
+    };
+    dispatch(addCard(calendarWrite));
   }
 
   function goBack() {
@@ -146,8 +184,8 @@ function DashboardScreens() {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-              <Dropdown.Item onClick={() => addDemoState()}>
-                <span className="navbar-sublink">Add Demo State</span>
+              <Dropdown.Item onClick={() => addLegacyCards()}>
+                <span className="navbar-sublink">Add Legacy Cards</span>
               </Dropdown.Item>
               <Dropdown.Item onClick={() => goBack()}>
                 <span className="navbar-sublink">Exit Calendar</span>
@@ -160,7 +198,6 @@ function DashboardScreens() {
       <div className="dashboard-container">
         <DashboardSwitcher screen={screen} />
       </div>
-      <Footer className="dashboard-footer-text" />
     </div>
   );
 }

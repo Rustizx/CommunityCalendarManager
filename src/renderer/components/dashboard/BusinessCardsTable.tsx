@@ -17,15 +17,15 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux-hooks';
 import {
   CalendarEventModel,
   ContactModel,
-  FamilyCardModel,
+  BusinessCardModel,
 } from '../../models/redux-models';
-import { addCard, setDefaultFamily } from '../../store/calendar-slice';
+import { addCard, setDefaultBusiness } from '../../store/calendar-slice';
 import { months, options, provinces } from '../../common/constants';
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const schema = yup.object().shape({
-  family_name: yup.string().required(),
+  business_name: yup.string().required(),
   contacts: yup.array().of(
     yup.object().shape({
       firstName: yup.string().required(),
@@ -58,33 +58,34 @@ function generateUniqSerial(): string {
   });
 }
 
-export default function FamilyCardsTable() {
+export default function BusinessCardsTable() {
   const calendar = useAppSelector((state) => state.calendar);
   const general = useAppSelector((state) => state.general);
   const dispatch = useAppDispatch();
 
   const [searchBox, setSearchBox] = useState('');
-  const [results, setResults] = useState<FamilyCardModel[]>(
-    calendar.familyCards
+  const [results, setResults] = useState<BusinessCardModel[]>(
+    calendar.businessCards
   );
-  const [selectedFamily, setSelectedFamily] = useState<FamilyCardModel>(
-    calendar.defaultFamilyCard
+  const [selectedBusiness, setSelectedBusiness] = useState<BusinessCardModel>(
+    calendar.defaultBusinessCard
   );
 
-  let fuse = new Fuse(calendar.familyCards, {
+  let fuse = new Fuse(calendar.businessCards, {
     shouldSort: true,
     findAllMatches: true,
-    keys: ['family_name', 'contacts[0].firstName', 'contacts[0].lastName'],
+    keys: ['business_name', 'contacts[0].firstName', 'contacts[0].lastName'],
   });
 
-  const [editFamily, setEditFamily] = useState(false);
+  const [editBusiness, setEditBusiness] = useState(false);
 
-  function expandFamilyCard(current: FamilyCardModel) {
+  function expandBusinessCard(current: BusinessCardModel) {
     const calendarEventsList: CalendarEventModel[] = [];
     const contactsList: ContactModel[] = [];
     const defaultCalendarEvents: CalendarEventModel =
-      calendar.defaultFamilyCard.calendarEvents[0];
-    const defaultContact: ContactModel = calendar.defaultFamilyCard.contacts[0];
+      calendar.defaultBusinessCard.calendarEvents[0];
+    const defaultContact: ContactModel =
+      calendar.defaultBusinessCard.contacts[0];
     for (let i = 0; i < 40; i += 1) {
       if (current.calendarEvents[i] !== undefined) {
         calendarEventsList.push(current.calendarEvents[i]);
@@ -99,9 +100,9 @@ export default function FamilyCardsTable() {
         contactsList.push(defaultContact);
       }
     }
-    const newCard: FamilyCardModel = {
+    const newCard: BusinessCardModel = {
       id: current.id,
-      family_name: current.family_name,
+      business_name: current.business_name,
       contacts: contactsList,
       contactDetails: current.contactDetails,
       address: current.address,
@@ -111,7 +112,7 @@ export default function FamilyCardsTable() {
     return newCard;
   }
 
-  function unexpandFamilyCard(current: FamilyCardModel) {
+  function unexpandBusinessCard(current: BusinessCardModel) {
     const calendarEventsList: CalendarEventModel[] = [];
     const contactsList: ContactModel[] = [];
     for (let i = 0; i < current.calendarEvents.length; i += 1) {
@@ -130,9 +131,9 @@ export default function FamilyCardsTable() {
         contactsList.push(current.contacts[i]);
       }
     }
-    const newCard: FamilyCardModel = {
+    const newCard: BusinessCardModel = {
       id: current.id,
-      family_name: current.family_name,
+      business_name: current.business_name,
       contacts: contactsList,
       contactDetails: current.contactDetails,
       address: current.address,
@@ -142,29 +143,33 @@ export default function FamilyCardsTable() {
     return newCard;
   }
 
-  function handleOpenAddFamily() {
-    setSelectedFamily(expandFamilyCard(calendar.defaultFamilyCard));
-    setEditFamily(true);
+  function handleOpenAddBusiness() {
+    setSelectedBusiness(expandBusinessCard(calendar.defaultBusinessCard));
+    setEditBusiness(true);
   }
 
-  function handleOpenEditFamily(id: string) {
-    const findFamily = calendar.familyCards.find((x) => {
+  function handleOpenEditBusiness(id: string) {
+    const findBusiness = calendar.businessCards.find((x) => {
       return x.id === id;
     });
-    if (findFamily !== undefined) {
-      setSelectedFamily(expandFamilyCard(findFamily));
-      setEditFamily(true);
+    if (findBusiness !== undefined) {
+      setSelectedBusiness(expandBusinessCard(findBusiness));
+      setEditBusiness(true);
     }
   }
 
   function searchTable(value: string) {
     setSearchBox(value);
     if (value === '') {
-      setResults(calendar.familyCards);
-      fuse = new Fuse(calendar.familyCards, {
+      setResults(calendar.businessCards);
+      fuse = new Fuse(calendar.businessCards, {
         shouldSort: true,
         findAllMatches: true,
-        keys: ['family_name', 'contacts[0].firstName', 'contacts[0].lastName'],
+        keys: [
+          'business_name',
+          'contacts[0].firstName',
+          'contacts[0].lastName',
+        ],
       });
     } else {
       const re = fuse.search(value);
@@ -178,35 +183,36 @@ export default function FamilyCardsTable() {
     searchTable('');
   }
 
-  function handleCloseEditFamily() {
-    setEditFamily(false);
+  function handleCloseEditBusiness() {
+    setEditBusiness(false);
     updateTable();
   }
 
-  function handleChangeFamily(values: FamilyCardModel) {
-    const cleanedFamilyCard = unexpandFamilyCard(values);
-    for (let l = 0; l < cleanedFamilyCard.contacts.length; l += 1) {
-      if (cleanedFamilyCard.contacts[l].lastName === '') {
-        cleanedFamilyCard.contacts[l].lastName = cleanedFamilyCard.family_name;
+  function handleChangeBusiness(values: BusinessCardModel) {
+    const cleanedBusinessCard = unexpandBusinessCard(values);
+    for (let l = 0; l < cleanedBusinessCard.contacts.length; l += 1) {
+      if (cleanedBusinessCard.contacts[l].lastName === '') {
+        cleanedBusinessCard.contacts[l].lastName =
+          cleanedBusinessCard.business_name;
       }
     }
-    if (cleanedFamilyCard.id === '') {
-      cleanedFamilyCard.id = generateUniqSerial();
+    if (cleanedBusinessCard.id === '') {
+      cleanedBusinessCard.id = generateUniqSerial();
     }
-    if (cleanedFamilyCard.address.province === '') {
-      cleanedFamilyCard.address.province = provinces[0].value;
+    if (cleanedBusinessCard.address.province === '') {
+      cleanedBusinessCard.address.province = provinces[0].value;
     }
-    if (parseInt(cleanedFamilyCard.order.amountDonated, 10) > 0) {
-      cleanedFamilyCard.order.didDonated = true;
+    if (parseInt(cleanedBusinessCard.order.amountDonated, 10) > 0) {
+      cleanedBusinessCard.order.didDonated = true;
     }
-    const addFamily = calendar.familyCards.filter((x) => {
-      return x.id !== cleanedFamilyCard.id;
+    const addBusiness = calendar.businessCards.filter((x) => {
+      return x.id !== cleanedBusinessCard.id;
     });
-    addFamily.push(cleanedFamilyCard);
+    addBusiness.push(cleanedBusinessCard);
 
     const tempCalendar = {
       ...calendar,
-      familyCards: addFamily,
+      businessCards: addBusiness,
     };
 
     const calendarWrite: WriteCalendarModel = {
@@ -215,7 +221,7 @@ export default function FamilyCardsTable() {
       password: general.password,
     };
     dispatch(addCard(calendarWrite));
-    handleCloseEditFamily();
+    handleCloseEditBusiness();
   }
 
   const [count, setCount] = useState(3);
@@ -237,13 +243,13 @@ export default function FamilyCardsTable() {
   };
 
   function handleDelete(famID: string) {
-    const newFamilies = calendar.familyCards.filter((x) => {
+    const newFamilies = calendar.businessCards.filter((x) => {
       return x.id !== famID;
     });
 
     const tempCalendar = {
       ...calendar,
-      familyCards: newFamilies,
+      businessCards: newFamilies,
     };
 
     const calendarWrite: WriteCalendarModel = {
@@ -252,18 +258,18 @@ export default function FamilyCardsTable() {
       password: general.password,
     };
     dispatch(addCard(calendarWrite));
-    handleCloseEditFamily();
+    handleCloseEditBusiness();
   }
 
-  function handleSetDefault(fam: FamilyCardModel) {
-    dispatch(setDefaultFamily(fam));
+  function handleSetDefault(fam: BusinessCardModel) {
+    dispatch(setDefaultBusiness(fam));
   }
 
   async function clickSavePDF() {
     const filePath: string =
       await window.electron.dialogs.createPDFFileDialog();
     if (filePath !== '') {
-      const result: string = await window.electron.files.writeFamilyCardPDF({
+      const result: string = await window.electron.files.writeBusinessCardPDF({
         path: filePath,
         password: '',
         calendar,
@@ -273,7 +279,7 @@ export default function FamilyCardsTable() {
   }
 
   const dateTable = (
-    values: FamilyCardModel,
+    values: BusinessCardModel,
     handleChange:
       | ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
       | undefined,
@@ -364,7 +370,7 @@ export default function FamilyCardsTable() {
           <Button
             className="card-options-items"
             variant="primary"
-            onClick={() => handleOpenAddFamily()}
+            onClick={() => handleOpenAddBusiness()}
           >
             Add New
           </Button>
@@ -387,7 +393,7 @@ export default function FamilyCardsTable() {
         <Table className="card-table" striped bordered hover size="sm">
           <thead>
             <tr>
-              <th>Family Name</th>
+              <th>Business Name</th>
               <th>Name</th>
               <th>Phone</th>
               <th>Address</th>
@@ -397,24 +403,24 @@ export default function FamilyCardsTable() {
             </tr>
           </thead>
           <tbody>
-            {results.map((family) => {
+            {results.map((Business) => {
               return (
-                <tr key={family.id}>
-                  <td>{family.family_name}</td>
-                  <td>{`${family.contacts[0].firstName} ${family.contacts[0].lastName}`}</td>
+                <tr key={Business.id}>
+                  <td>{Business.business_name}</td>
+                  <td>{`${Business.contacts[0].firstName} ${Business.contacts[0].lastName}`}</td>
                   <td>
-                    {family.contactDetails.homePhone.replace(
+                    {Business.contactDetails.homePhone.replace(
                       /(\d{3})(\d{3})(\d{4})/,
                       '$1-$2-$3'
                     )}
                   </td>
-                  <td>{`${family.address.addressLine}, ${family.address.city}, ${family.address.province}`}</td>
-                  <td>{`${family.calendarEvents.length}`}</td>
-                  <td>{`${family.order.amountOfCalendarsPurchased}`}</td>
+                  <td>{`${Business.address.addressLine}, ${Business.address.city}, ${Business.address.province}`}</td>
+                  <td>{`${Business.calendarEvents.length}`}</td>
+                  <td>{`${Business.order.amountOfCalendarsPurchased}`}</td>
                   <td>
                     <Button
                       id="dropdown-split-variants-primary"
-                      onClick={() => handleOpenEditFamily(family.id)}
+                      onClick={() => handleOpenEditBusiness(Business.id)}
                       variant="primary"
                       style={{ height: '35px' }}
                     >
@@ -428,8 +434,8 @@ export default function FamilyCardsTable() {
         </Table>
       </div>
       <Modal
-        show={editFamily}
-        onHide={() => handleCloseEditFamily()}
+        show={editBusiness}
+        onHide={() => handleCloseEditBusiness()}
         fullscreen
         dialogClassName="card-modal"
         backdrop="static"
@@ -437,16 +443,16 @@ export default function FamilyCardsTable() {
       >
         <Modal.Header closeButton>
           <Modal.Title className="card-title">
-            {selectedFamily.family_name !== ''
-              ? `Editing the ${selectedFamily.family_name} Family`
-              : `Adding a New Family`}
+            {selectedBusiness.business_name !== ''
+              ? `Editing the ${selectedBusiness.business_name} Business`
+              : `Adding a New Business`}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Formik
             validationSchema={schema}
             onSubmit={(values) => console.log(values)}
-            initialValues={selectedFamily}
+            initialValues={selectedBusiness}
           >
             {({
               setFieldValue,
@@ -469,14 +475,16 @@ export default function FamilyCardsTable() {
                       className="form-component"
                       controlId="validationFormik01"
                     >
-                      <Form.Label className="form-text">Family Name</Form.Label>
+                      <Form.Label className="form-text">
+                        Business Name
+                      </Form.Label>
                       <Form.Control
                         type="text"
-                        name="family_name"
-                        placeholder="Family Name"
-                        value={values.family_name}
+                        name="business_name"
+                        placeholder="Business Name"
+                        value={values.business_name}
                         onChange={handleChange}
-                        isInvalid={!!errors.family_name}
+                        isInvalid={!!errors.business_name}
                       />
                     </Form.Group>
                     <Form.Group
@@ -548,7 +556,7 @@ export default function FamilyCardsTable() {
                           placeholder="Last Name"
                           value={
                             values.contacts[0].lastName === ''
-                              ? values.family_name
+                              ? values.business_name
                               : values.contacts[0].lastName
                           }
                           onChange={handleChange}
@@ -587,7 +595,7 @@ export default function FamilyCardsTable() {
                           placeholder="Last Name"
                           value={
                             values.contacts[1].lastName === ''
-                              ? values.family_name
+                              ? values.business_name
                               : values.contacts[1].lastName
                           }
                           onChange={handleChange}
@@ -755,7 +763,7 @@ export default function FamilyCardsTable() {
                   <Col md="2">
                     <Button
                       type="submit"
-                      onClick={() => handleChangeFamily(values)}
+                      onClick={() => handleChangeBusiness(values)}
                       style={{ width: '100%' }}
                     >
                       Submit
@@ -772,12 +780,12 @@ export default function FamilyCardsTable() {
                       Reset
                     </Button>
                   </Col>
-                  {selectedFamily.id === '' && (
+                  {selectedBusiness.id === '' && (
                     <Col md="1">
                       <Button
                         type="button"
                         variant="outline-info"
-                        onClick={() => handleSetDefault(selectedFamily)}
+                        onClick={() => handleSetDefault(selectedBusiness)}
                         style={{ width: '100%' }}
                       >
                         Set Default
@@ -788,7 +796,7 @@ export default function FamilyCardsTable() {
                     <Button
                       type="button"
                       variant="outline-danger"
-                      onClick={() => handleDelete(selectedFamily.id)}
+                      onClick={() => handleDelete(selectedBusiness.id)}
                       style={{ width: '100%' }}
                     >
                       Delete

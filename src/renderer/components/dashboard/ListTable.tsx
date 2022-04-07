@@ -5,26 +5,7 @@ import Table from 'react-bootstrap/Table';
 import { CalendarEventModel } from '../../models/redux-models';
 
 import { useAppSelector } from '../../hooks/redux-hooks';
-
-const shortMonths = [
-  'jan',
-  'feb',
-  'mar',
-  'apr',
-  'may',
-  'jun',
-  'jul',
-  'aug',
-  'sep',
-  'oct',
-  'nov',
-  'dec',
-];
-
-interface SortCalendarEventFromDate {
-  event: CalendarEventModel;
-  date: Date;
-}
+import sortEvents from '../../services/sort-services';
 
 export default function ListTable() {
   const calendar = useAppSelector((state) => state.calendar);
@@ -33,7 +14,7 @@ export default function ListTable() {
     const l: CalendarEventModel[] = [];
     const fam = calendar.familyCards;
     for (let i = 0; i < fam.length; i += 1) {
-      if (fam[i].order.amountOfCalendarsPurchased > 0) {
+      if (parseInt(fam[i].order.amountOfCalendarsPurchased, 10) > 0) {
         for (let x = 0; x < fam[i].calendarEvents.length; x += 1) {
           l.push(fam[i].calendarEvents[x]);
         }
@@ -46,7 +27,7 @@ export default function ListTable() {
     const l: CalendarEventModel[] = [];
     const fam = calendar.businessCards;
     for (let i = 0; i < fam.length; i += 1) {
-      if (fam[i].order.amountOfCalendarsPurchased > 0) {
+      if (parseInt(fam[i].order.amountOfCalendarsPurchased, 10) > 0) {
         for (let x = 0; x < fam[i].calendarEvents.length; x += 1) {
           l.push(fam[i].calendarEvents[x]);
         }
@@ -59,30 +40,13 @@ export default function ListTable() {
     const l: CalendarEventModel[] = [];
     const fam = calendar.clubCards;
     for (let i = 0; i < fam.length; i += 1) {
-      if (fam[i].order.amountOfCalendarsPurchased > 0) {
+      if (parseInt(fam[i].order.amountOfCalendarsPurchased, 10) > 0) {
         for (let x = 0; x < fam[i].calendarEvents.length; x += 1) {
           l.push(fam[i].calendarEvents[x]);
         }
       }
     }
     return l;
-  }
-
-  function sortEvents(events: CalendarEventModel[]) {
-    const newList: SortCalendarEventFromDate[] = [];
-    events.forEach((event) => {
-      const day = parseInt(event.date.slice(-2), 10);
-      let month = 0;
-      for (let i = 0; i < shortMonths.length; i += 1) {
-        if (event.date.toLowerCase().substring(0, 3) === shortMonths[i]) {
-          month = i;
-          break;
-        }
-      }
-      newList.push({ event, date: new Date(2020, month, day) });
-    });
-    newList.sort((a, b) => +new Date(a.date) - +new Date(b.date));
-    return newList.map((o) => o.event);
   }
 
   function fetchEvents() {
@@ -122,7 +86,7 @@ export default function ListTable() {
               <tr key={`${item.name}${item.date}`}>
                 <td>{item.name}</td>
                 <td>{item.type}</td>
-                <td>{item.date}</td>
+                <td>{`${item.date.month}  ${item.date.day}`}</td>
               </tr>
             );
           })}

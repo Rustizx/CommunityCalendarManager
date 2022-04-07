@@ -203,6 +203,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.1",
+    "@types/jspdf": "^2.0.0",
     "bootstrap": "^5.1.3",
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.6",
@@ -210,6 +211,8 @@
     "formik": "^2.2.9",
     "fuse.js": "^6.5.3",
     "history": "^5.3.0",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.23",
     "react": "^17.0.2",
     "react-bootstrap": "^2.2.2",
     "react-dom": "^17.0.2",

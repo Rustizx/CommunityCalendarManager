@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { WriteCalendarModel } from '../models/add-models';
+import CalendarService from '../services/calendar-service';
 import {
   defaultBusiness,
   defaultClub,
   defaultFamily,
-  demoFamilyCard,
 } from '../models/model-defaults';
 import {
   BusinessCardModel,
@@ -59,8 +60,15 @@ const calendarSlice = createSlice({
     setClubCards(state, action: PayloadAction<ClubCardModel[]>) {
       state.clubCards = action.payload;
     },
-    addDemo(state) {
-      state.familyCards = [demoFamilyCard];
+    addCard(state, action: PayloadAction<WriteCalendarModel>) {
+      state.familyCards = action.payload.calendar.familyCards;
+      state.businessCards = action.payload.calendar.businessCards;
+      state.clubCards = action.payload.calendar.clubCards;
+      CalendarService.writeCalendarFile(
+        action.payload.path,
+        action.payload.password,
+        action.payload.calendar
+      );
     },
     resetCalendar(state) {
       state.name = intialCalendarState.name;
@@ -85,7 +93,7 @@ export const {
   setFamilyCards,
   setBusinessCards,
   setClubCards,
-  addDemo,
+  addCard,
   resetCalendar,
 } = calendarSlice.actions;
 

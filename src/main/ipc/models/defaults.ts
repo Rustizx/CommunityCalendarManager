@@ -2,7 +2,7 @@ import {
   BusinessCardModel,
   ClubCardModel,
   FamilyCardModel,
-} from './redux-models';
+} from 'renderer/models/redux-models';
 
 export const defaultFamily: FamilyCardModel = {
   id: '',
