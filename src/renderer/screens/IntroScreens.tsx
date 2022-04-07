@@ -1,13 +1,12 @@
 import Row from 'react-bootstrap/Row';
 
+import { IntroScreenTypes as ScreenTypes } from 'main/common/screen-types';
 import Welcome from '../components/intro/Welcome';
-import MakePassword from '../components/intro/MakeCalendar';
-import EnterPassword from '../components/intro/EnterCalendar';
+import MakeCalendar from '../components/intro/MakeCalendar';
+import EnterPassword from '../components/intro/EnterPassword';
 
 import BackButton from '../components/intro/BackButton';
 import Footer from '../components/Footer';
-
-import { IntroScreenTypes } from '../common/ScreenTypes';
 
 interface IntroScreensProps {
   type: string;
@@ -17,12 +16,12 @@ function IntroScreens(props: IntroScreensProps) {
   const { type } = props;
   let isBackButtonVisable = true;
   let child = <></>;
-  if (type === IntroScreenTypes.Welcome) {
+  if (type === ScreenTypes.Welcome) {
     isBackButtonVisable = false;
     child = <Welcome />;
-  } else if (type === IntroScreenTypes.MakePassword) {
-    child = <MakePassword />;
-  } else if (type === IntroScreenTypes.EnterPassword) {
+  } else if (type === ScreenTypes.MakeCalendar) {
+    child = <MakeCalendar />;
+  } else if (type === ScreenTypes.EnterPassword) {
     child = <EnterPassword />;
   }
 

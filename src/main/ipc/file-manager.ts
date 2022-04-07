@@ -1,38 +1,31 @@
 import { ipcMain } from 'electron';
+import { months } from '../common/constants';
 import {
+  EmptyBusinessCard,
+  EmptyClubCard,
+  EmptyFamilyCard,
+} from '../common/empty-cards';
+import { LegacyFamilyModels } from '../models/legacy-calendar-model';
+import CalendarModel, {
   BusinessCardModel,
   CalendarEventModel,
-  CalendarModel,
   FamilyCardModel,
+} from '../models/calendar-model';
+import {
+  EncryptedFileModel,
   ImportCalendarModel,
-} from 'renderer/models/redux-models';
-import { LegacyFamilyModels } from 'renderer/models/legacy-models';
-import { defaultBusiness, defaultClub, defaultFamily } from './models/defaults';
-import { ReadFileType, WriteFileType } from './types/file-manager-types';
-import { EncryptedFileType, encrypt, decrypt } from './service/encryption';
+  ReadFileModel,
+  WriteCalendarFileModel,
+} from '../models/ipc-models';
+import { encrypt, decrypt } from './service/encryption';
 import { familyCardsPDF, businessCardsPDF, clubCardsPDF } from './service/pdf';
 
 const fs = require('fs');
 
-const monthNames = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
-
-function readCalendarFile(fileInfo: ReadFileType): ImportCalendarModel {
+function readCalendarFile(fileInfo: ReadFileModel): ImportCalendarModel {
   try {
     const rawData: string = fs.readFileSync(fileInfo.path, 'utf8');
-    const encryptedData: EncryptedFileType = JSON.parse(rawData);
+    const encryptedData: EncryptedFileModel = JSON.parse(rawData);
 
     const decryptedData: string = decrypt(encryptedData, fileInfo.password);
 
@@ -56,7 +49,7 @@ function readCalendarFile(fileInfo: ReadFileType): ImportCalendarModel {
   }
 }
 
-function readLegacyCalendarFile(fileInfo: ReadFileType): ImportCalendarModel {
+function readLegacyCalendarFile(fileInfo: ReadFileModel): ImportCalendarModel {
   try {
     const data: LegacyFamilyModels[] = JSON.parse(
       fs.readFileSync(fileInfo.path, 'utf8')
@@ -72,7 +65,7 @@ function readLegacyCalendarFile(fileInfo: ReadFileType): ImportCalendarModel {
           type: data[x].calendar[y].type,
           date: {
             month: `${
-              monthNames[parseInt(data[x].calendar[y].date.slice(5, 7), 10) - 1]
+              months[parseInt(data[x].calendar[y].date.slice(5, 7), 10) - 1]
             }`,
             day: `${data[x].calendar[y].date.slice(8, 10)}`,
           },
@@ -148,11 +141,11 @@ function readLegacyCalendarFile(fileInfo: ReadFileType): ImportCalendarModel {
       dateCreated: '',
       dateModified: '',
       version: '',
-      defaultFamilyCard: defaultFamily,
+      defaultFamilyCard: EmptyFamilyCard,
       familyCards,
-      defaultBusinessCard: defaultBusiness,
+      defaultBusinessCard: EmptyBusinessCard,
       businessCards,
-      defaultClubCard: defaultClub,
+      defaultClubCard: EmptyClubCard,
       clubCards: [],
     };
 
@@ -168,11 +161,13 @@ function readLegacyCalendarFile(fileInfo: ReadFileType): ImportCalendarModel {
   }
 }
 
-function writeCalendarFile(fileInfo: WriteFileType): ImportCalendarModel {
+function writeCalendarFile(
+  fileInfo: WriteCalendarFileModel
+): ImportCalendarModel {
   try {
     const stringData: string = JSON.stringify(fileInfo.calendar);
 
-    const encryptedData: EncryptedFileType = encrypt(
+    const encryptedData: EncryptedFileModel = encrypt(
       stringData,
       fileInfo.password
     );
@@ -192,7 +187,7 @@ function writeCalendarFile(fileInfo: WriteFileType): ImportCalendarModel {
   });
 }
 
-function writeFamilyCardPDF(fileInfo: WriteFileType): boolean {
+function writeFamilyCardPDF(fileInfo: WriteCalendarFileModel): boolean {
   try {
     const { familyCards } = fileInfo.calendar;
 
@@ -205,7 +200,7 @@ function writeFamilyCardPDF(fileInfo: WriteFileType): boolean {
   }
 }
 
-function writeBusinessCardPDF(fileInfo: WriteFileType): boolean {
+function writeBusinessCardPDF(fileInfo: WriteCalendarFileModel): boolean {
   try {
     const { businessCards } = fileInfo.calendar;
 
@@ -218,7 +213,7 @@ function writeBusinessCardPDF(fileInfo: WriteFileType): boolean {
   }
 }
 
-function writeClubCardPDF(fileInfo: WriteFileType): boolean {
+function writeClubCardPDF(fileInfo: WriteCalendarFileModel): boolean {
   try {
     const { clubCards } = fileInfo.calendar;
 

@@ -1,54 +1,16 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/no-duplicates */
 /* eslint-disable new-cap */
+
+import sortEvents from '../../services/sort-calendar-events';
 import {
   BusinessCardModel,
-  CalendarEventModel,
   ClubCardModel,
   FamilyCardModel,
-} from 'renderer/models/redux-models';
+} from '../../models/calendar-model';
 
 const jsPDF = require('jspdf');
 require('jspdf-autotable');
-
-interface SortCalendarEventFromDate {
-  event: CalendarEventModel;
-  date: Date;
-}
-
-const shortMonths = [
-  'jan',
-  'feb',
-  'mar',
-  'apr',
-  'may',
-  'jun',
-  'jul',
-  'aug',
-  'sep',
-  'oct',
-  'nov',
-  'dec',
-];
-
-function sortEvents(events: CalendarEventModel[]) {
-  const newList: SortCalendarEventFromDate[] = [];
-  events.forEach((event) => {
-    let month = 0;
-    for (let i = 0; i < shortMonths.length; i += 1) {
-      if (event.date.month.toLowerCase().substring(0, 3) === shortMonths[i]) {
-        month = i;
-        break;
-      }
-    }
-    newList.push({
-      event,
-      date: new Date(2020, month, parseInt(event.date.day, 10)),
-    });
-  });
-  newList.sort((a, b) => +new Date(a.date) - +new Date(b.date));
-  return newList.map((o) => o.event);
-}
 
 const headers = ['Name', 'Date', 'Type'];
 

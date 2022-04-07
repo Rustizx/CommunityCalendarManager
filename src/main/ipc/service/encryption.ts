@@ -1,14 +1,10 @@
 import * as crypto from 'crypto';
+import { EncryptedFileModel } from 'main/models/ipc-models';
 
 const algorithm = 'aes-256-ctr';
 const iv = crypto.randomBytes(16);
 
-export interface EncryptedFileType {
-  iv: string;
-  encryptedData: string;
-}
-
-export function encrypt(data: string, pass: string): EncryptedFileType {
+export function encrypt(data: string, pass: string): EncryptedFileModel {
   const password = crypto.scryptSync(pass, 'salt', 32);
   const cipher = crypto.createCipheriv(algorithm, Buffer.from(password), iv);
   let encrypted = cipher.update(data);
@@ -16,7 +12,7 @@ export function encrypt(data: string, pass: string): EncryptedFileType {
   return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
 }
 
-export function decrypt(data: EncryptedFileType, pass: string): string {
+export function decrypt(data: EncryptedFileModel, pass: string): string {
   const password = crypto.scryptSync(pass, 'salt', 32);
   const ivFile = Buffer.from(data.iv, 'hex');
   const encryptedText = Buffer.from(data.encryptedData, 'hex');

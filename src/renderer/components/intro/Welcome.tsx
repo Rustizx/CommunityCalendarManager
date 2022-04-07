@@ -1,11 +1,12 @@
 /* eslint-disable no-console */
 import Row from 'react-bootstrap/Row';
 import { useNavigate } from 'react-router-dom';
-import { setGeneralPath } from '../../store/general-slice';
-import { useAppDispatch } from '../../hooks/redux-hooks';
+import routePaths from 'main/common/route-paths';
+import { setGeneralPath } from '../../redux/store/general-slice';
+import { useAppDispatch } from '../../redux/hooks/redux-hooks';
 
-import ImportExistingCalendarIcon from '../../icons/ImportFileIcon';
-import CreateNewCalendarIcon from '../../icons/AddFileIcon';
+import ImportExistingCalendarIcon from '../../assets/icons/ImportFileIcon';
+import CreateNewCalendarIcon from '../../assets/icons/AddFileIcon';
 
 function WelcomeScreen() {
   const dispatch = useAppDispatch();
@@ -16,7 +17,7 @@ function WelcomeScreen() {
       await window.electron.dialogs.openCalendarFileDialog();
     if (filePath !== '') {
       dispatch(setGeneralPath(filePath));
-      navigate('/enter-calendar');
+      navigate(routePaths.enterPassword);
     }
   }
 
@@ -25,7 +26,7 @@ function WelcomeScreen() {
       await window.electron.dialogs.createCalendarFileDialog();
     if (filePath !== '') {
       dispatch(setGeneralPath(filePath));
-      navigate('/make-calendar');
+      navigate(routePaths.makeCalendar);
     }
   }
 
