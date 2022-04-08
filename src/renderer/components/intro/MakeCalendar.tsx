@@ -8,13 +8,23 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
-import { WriteFileType } from 'main/ipc/types/file-manager-types';
-import { setGeneralError, setGeneralPassword } from '../../store/general-slice';
-import { setCalendar } from '../../store/calendar-slice';
-import { CalendarModel } from '../../models/redux-models';
-import { fileVersion } from '../../common/constants';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux-hooks';
-import AddIcon from '../../icons/AddIcon';
+import CalendarModel from 'main/models/calendar-model';
+import {
+  EmptyBusinessCard,
+  EmptyClubCard,
+  EmptyFamilyCard,
+} from 'main/common/empty-cards';
+import { WriteCalendarFileModel } from 'main/models/ipc-models';
+import { fileVersion } from 'main/common/constants';
+
+import routePaths from 'main/common/route-paths';
+import {
+  setGeneralError,
+  setGeneralPassword,
+} from '../../redux/store/general-slice';
+import { setCalendar } from '../../redux/store/calendar-slice';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks/redux-hooks';
+import AddIcon from '../../assets/icons/AddIcon';
 
 const MySwal = withReactContent(Swal);
 
@@ -71,9 +81,15 @@ function MakePassword() {
         dateCreated: Date.now().toString(),
         dateModified: Date.now().toString(),
         version: fileVersion,
+        defaultFamilyCard: EmptyFamilyCard,
+        familyCards: [],
+        defaultBusinessCard: EmptyBusinessCard,
+        businessCards: [],
+        defaultClubCard: EmptyClubCard,
+        clubCards: [],
       };
 
-      const fileInfo: WriteFileType = {
+      const fileInfo: WriteCalendarFileModel = {
         path: general.path,
         password,
         calendar: newCalendar,
@@ -86,7 +102,7 @@ function MakePassword() {
       if (fileContents.status === 'success') {
         dispatch(setCalendar(fileContents.calendar ?? calendar));
         dispatch(setGeneralError(''));
-        navigate('/dashboard');
+        navigate(routePaths.home);
       } else if (fileContents.status === 'file-error') {
         Swal.fire({
           icon: 'error',
@@ -107,6 +123,12 @@ function MakePassword() {
     }
     setLoading(false);
   }
+
+  const onKeyDownHandler = (e: { keyCode: number }) => {
+    if (e.keyCode === 13) {
+      createCalendar();
+    }
+  };
 
   return (
     <div className="entermake-body">
@@ -137,8 +159,8 @@ function MakePassword() {
             role="button"
             className="entermake-button"
             onClick={() => createCalendar()}
-            onKeyDown={() => createCalendar()}
-            tabIndex={-1}
+            onKeyDown={onKeyDownHandler}
+            tabIndex={0}
           >
             <AddIcon className="entermake-button-icon" width={28} height={32} />
             <p className="entermake-button-text">Create Calendar</p>

@@ -1,11 +1,12 @@
 /* eslint-disable no-console */
 import Row from 'react-bootstrap/Row';
 import { useNavigate } from 'react-router-dom';
-import { setGeneralPath } from '../../store/general-slice';
-import { useAppDispatch } from '../../hooks/redux-hooks';
+import routePaths from 'main/common/route-paths';
+import { setGeneralPath } from '../../redux/store/general-slice';
+import { useAppDispatch } from '../../redux/hooks/redux-hooks';
 
-import ImportExistingCalendarIcon from '../../icons/ImportFileIcon';
-import CreateNewCalendarIcon from '../../icons/AddFileIcon';
+import ImportExistingCalendarIcon from '../../assets/icons/ImportFileIcon';
+import CreateNewCalendarIcon from '../../assets/icons/AddFileIcon';
 
 function WelcomeScreen() {
   const dispatch = useAppDispatch();
@@ -16,7 +17,7 @@ function WelcomeScreen() {
       await window.electron.dialogs.openCalendarFileDialog();
     if (filePath !== '') {
       dispatch(setGeneralPath(filePath));
-      navigate('/enter-calendar');
+      navigate(routePaths.enterPassword);
     }
   }
 
@@ -25,9 +26,21 @@ function WelcomeScreen() {
       await window.electron.dialogs.createCalendarFileDialog();
     if (filePath !== '') {
       dispatch(setGeneralPath(filePath));
-      navigate('/make-calendar');
+      navigate(routePaths.makeCalendar);
     }
   }
+
+  const onKeyDownOpenExistingHandler = (e: { keyCode: number }) => {
+    if (e.keyCode === 13) {
+      clickOpenExisting();
+    }
+  };
+
+  const onKeyDownCreateNewHandler = (e: { keyCode: number }) => {
+    if (e.keyCode === 13) {
+      clickCreateNew();
+    }
+  };
 
   return (
     <div className="welcome-body">
@@ -44,8 +57,8 @@ function WelcomeScreen() {
           role="button"
           className="welcome-button"
           onClick={() => clickOpenExisting()}
-          onKeyDown={() => clickOpenExisting()}
-          tabIndex={-1}
+          onKeyDown={onKeyDownOpenExistingHandler}
+          tabIndex={0}
         >
           <ImportExistingCalendarIcon
             className="welcome-button-icon welcome-button-icon-import"
@@ -58,8 +71,8 @@ function WelcomeScreen() {
           role="button"
           className="welcome-button"
           onClick={() => clickCreateNew()}
-          onKeyDown={() => clickCreateNew()}
-          tabIndex={-1}
+          onKeyDown={onKeyDownCreateNewHandler}
+          tabIndex={0}
         >
           <CreateNewCalendarIcon
             className="welcome-button-icon"

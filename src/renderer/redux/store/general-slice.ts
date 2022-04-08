@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { GeneralModel } from '../models/redux-models';
+import { GeneralModel } from 'main/models/store-models';
 
 const intialGeneralState: GeneralModel = {
   isFileLoaded: false,

@@ -3,28 +3,57 @@ import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './stylesheets/App.scss';
 
+import routePaths from 'main/common/route-paths';
+import {
+  DashboardScreensTypes,
+  IntroScreenTypes,
+} from 'main/common/screen-types';
+
 import IntroScreens from './screens/IntroScreens';
-import ScreenTypes from './common/ScreenTypes';
-import DashboardScreen from './screens/DashboardScreen';
+import Dashboard from './screens/dashboard';
 
 export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<IntroScreens type={ScreenTypes.Welcome} />} />
+        {/* INTRO SCREENS */}
         <Route
-          path="/enter-calendar"
-          element={<IntroScreens type={ScreenTypes.EnterPassword} />}
+          path={routePaths.welcome}
+          element={<IntroScreens type={IntroScreenTypes.Welcome} />}
         />
         <Route
-          path="/reset-password"
-          element={<IntroScreens type={ScreenTypes.ResetPassword} />}
+          path={routePaths.enterPassword}
+          element={<IntroScreens type={IntroScreenTypes.EnterPassword} />}
         />
         <Route
-          path="/make-calendar"
-          element={<IntroScreens type={ScreenTypes.MakePassword} />}
+          path={routePaths.resetPassword}
+          element={<IntroScreens type={IntroScreenTypes.ResetPassword} />}
         />
-        <Route path="/dashboard" element={<DashboardScreen />} />
+        <Route
+          path={routePaths.makeCalendar}
+          element={<IntroScreens type={IntroScreenTypes.MakeCalendar} />}
+        />
+        {/* DASHBOARD SCREENS */}
+        <Route
+          path={routePaths.home}
+          element={<Dashboard screen={DashboardScreensTypes.Home} />}
+        />
+        <Route
+          path={routePaths.familyCards}
+          element={<Dashboard screen={DashboardScreensTypes.FamilyCards} />}
+        />
+        <Route
+          path={routePaths.businessCards}
+          element={<Dashboard screen={DashboardScreensTypes.BusinessCards} />}
+        />
+        <Route
+          path={routePaths.clubCards}
+          element={<Dashboard screen={DashboardScreensTypes.ClubCards} />}
+        />
+        <Route
+          path={routePaths.list}
+          element={<Dashboard screen={DashboardScreensTypes.List} />}
+        />
       </Routes>
     </Router>
   );

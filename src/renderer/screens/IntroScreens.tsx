@@ -1,13 +1,12 @@
 import Row from 'react-bootstrap/Row';
 
+import { IntroScreenTypes as ScreenTypes } from 'main/common/screen-types';
 import Welcome from '../components/intro/Welcome';
-import MakePassword from '../components/intro/MakeCalendar';
-import EnterPassword from '../components/intro/EnterCalendar';
+import MakeCalendar from '../components/intro/MakeCalendar';
+import EnterPassword from '../components/intro/EnterPassword';
 
 import BackButton from '../components/intro/BackButton';
 import Footer from '../components/Footer';
-
-import ScreenTypes from '../common/ScreenTypes';
 
 interface IntroScreensProps {
   type: string;
@@ -20,8 +19,8 @@ function IntroScreens(props: IntroScreensProps) {
   if (type === ScreenTypes.Welcome) {
     isBackButtonVisable = false;
     child = <Welcome />;
-  } else if (type === ScreenTypes.MakePassword) {
-    child = <MakePassword />;
+  } else if (type === ScreenTypes.MakeCalendar) {
+    child = <MakeCalendar />;
   } else if (type === ScreenTypes.EnterPassword) {
     child = <EnterPassword />;
   }
@@ -43,7 +42,7 @@ function IntroScreens(props: IntroScreensProps) {
           <div className="intro-container">{child}</div>
         </Row>
       </div>
-      <Footer />
+      <Footer className="" />
     </div>
   );
 }

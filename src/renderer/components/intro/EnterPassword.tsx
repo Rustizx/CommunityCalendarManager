@@ -6,12 +6,17 @@ import Spinner from 'react-bootstrap/Spinner';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-import { ReadFileType } from 'main/ipc/types/file-manager-types';
-import { setCalendar } from '../../store/calendar-slice';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux-hooks';
-import { setGeneralError, setGeneralPassword } from '../../store/general-slice';
-import LockIcon from '../../icons/LockIcon';
-import UnlockIcon from '../../icons/UnlockIcon';
+import { ReadFileModel } from 'main/models/ipc-models';
+
+import routePaths from 'main/common/route-paths';
+import { setCalendar } from '../../redux/store/calendar-slice';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks/redux-hooks';
+import {
+  setGeneralError,
+  setGeneralPassword,
+} from '../../redux/store/general-slice';
+import LockIcon from '../../assets/icons/LockIcon';
+import UnlockIcon from '../../assets/icons/UnlockIcon';
 
 function EnterPassword() {
   const dispatch = useAppDispatch();
@@ -27,7 +32,7 @@ function EnterPassword() {
     setLoading(true);
     dispatch(setGeneralPassword(password));
 
-    const fileInfo: ReadFileType = {
+    const fileInfo: ReadFileModel = {
       path: general.path,
       password,
     };
@@ -36,7 +41,7 @@ function EnterPassword() {
     if (fileContents.status === 'success') {
       dispatch(setCalendar(fileContents.calendar ?? calendar));
       dispatch(setGeneralError(''));
-      navigate('/dashboard');
+      navigate(routePaths.home);
     } else if (fileContents.status === 'password-error') {
       Swal.fire({
         icon: 'error',
@@ -57,6 +62,12 @@ function EnterPassword() {
     dispatch(setGeneralError(fileContents.status));
     setLoading(false);
   }
+
+  const onKeyDownHandler = (e: { keyCode: number }) => {
+    if (e.keyCode === 13) {
+      openCalendar();
+    }
+  };
 
   return (
     <div className="entermake-body">
@@ -88,8 +99,8 @@ function EnterPassword() {
             role="button"
             className="entermake-button"
             onClick={() => openCalendar()}
-            onKeyDown={() => openCalendar()}
-            tabIndex={-1}
+            onKeyDown={onKeyDownHandler}
+            tabIndex={0}
             onMouseEnter={() => setVisible(true)}
             onMouseLeave={() => setVisible(false)}
           >

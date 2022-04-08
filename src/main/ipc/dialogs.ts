@@ -5,6 +5,7 @@ async function openCalendarFileDialog() {
     title: 'Open Calendar',
     filters: [
       { name: 'CalFunder Files', extensions: ['calfunder'] },
+      { name: 'Legacy Files', extensions: ['json'] },
       { name: 'All Files', extensions: ['*'] },
     ],
     properties: ['openFile'],
@@ -29,7 +30,22 @@ async function createCalendarFileDialog() {
   return filePath;
 }
 
+async function createPDFFileDialog() {
+  const { canceled, filePath } = await dialog.showSaveDialog({
+    title: 'Create Calendar',
+    filters: [
+      { name: 'PDF File', extensions: ['pdf'] },
+      { name: 'All Files', extensions: ['*'] },
+    ],
+  });
+  if (canceled) {
+    return '';
+  }
+  return filePath;
+}
+
 export default function Dialogs() {
   ipcMain.handle('dialog:open-calender-file', openCalendarFileDialog);
   ipcMain.handle('dialog:create-calender-file', createCalendarFileDialog);
+  ipcMain.handle('dialog:create-pdf-file', createPDFFileDialog);
 }

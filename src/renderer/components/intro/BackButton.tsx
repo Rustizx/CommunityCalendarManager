@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { resetCalendar } from '../../store/calendar-slice';
-import { resetGeneral } from '../../store/general-slice';
-import { useAppDispatch } from '../../hooks/redux-hooks';
+import routePaths from 'main/common/route-paths';
+import { resetCalendar } from '../../redux/store/calendar-slice';
+import { resetGeneral } from '../../redux/store/general-slice';
+import { useAppDispatch } from '../../redux/hooks/redux-hooks';
 
-import BackButtonIcon from '../../icons/BackButtonIcon';
+import BackButtonIcon from '../../assets/icons/BackButtonIcon';
 
 interface BackButtonProps {
   isVisible: boolean;
@@ -18,7 +19,7 @@ export default function BackButton(props: BackButtonProps) {
   function goBack() {
     dispatch(resetGeneral());
     dispatch(resetCalendar());
-    navigate('/');
+    navigate(routePaths.welcome);
   }
 
   return isVisible ? (
