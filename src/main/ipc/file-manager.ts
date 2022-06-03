@@ -1,15 +1,10 @@
 import { ipcMain } from 'electron';
 import { months } from '../common/constants';
-import {
-  EmptyBusinessCard,
-  EmptyClubCard,
-  EmptyFamilyCard,
-} from '../common/empty-cards';
+import EmptyCard from '../common/empty-cards';
 import { LegacyFamilyModels } from '../models/legacy-calendar-model';
 import CalendarModel, {
-  BusinessCardModel,
   CalendarEventModel,
-  FamilyCardModel,
+  CardModel,
 } from '../models/calendar-model';
 import {
   EncryptedFileModel,
@@ -54,8 +49,8 @@ function readLegacyCalendarFile(fileInfo: ReadFileModel): ImportCalendarModel {
     const data: LegacyFamilyModels[] = JSON.parse(
       fs.readFileSync(fileInfo.path, 'utf8')
     );
-    const familyCards: FamilyCardModel[] = [];
-    const businessCards: BusinessCardModel[] = [];
+    const familyCards: CardModel[] = [];
+    const businessCards: CardModel[] = [];
 
     for (let x = 0; x < data.length; x += 1) {
       const cal: CalendarEventModel[] = [];
@@ -74,7 +69,7 @@ function readLegacyCalendarFile(fileInfo: ReadFileModel): ImportCalendarModel {
       if (data[x].business !== undefined && data[x].business === true) {
         businessCards.push({
           id: data[x].id,
-          business_name: data[x].familyname,
+          name: data[x].familyname,
           contacts: [
             {
               firstName: data[x].firstnames[0].split(' ')[0],
@@ -102,7 +97,7 @@ function readLegacyCalendarFile(fileInfo: ReadFileModel): ImportCalendarModel {
       } else {
         familyCards.push({
           id: data[x].id,
-          family_name: data[x].familyname,
+          name: data[x].familyname,
           contacts: [
             {
               firstName: data[x].firstnames[0],
@@ -141,11 +136,9 @@ function readLegacyCalendarFile(fileInfo: ReadFileModel): ImportCalendarModel {
       dateCreated: '',
       dateModified: '',
       version: '',
-      defaultFamilyCard: EmptyFamilyCard,
+      defaultCard: EmptyCard,
       familyCards,
-      defaultBusinessCard: EmptyBusinessCard,
       businessCards,
-      defaultClubCard: EmptyClubCard,
       clubCards: [],
     };
 

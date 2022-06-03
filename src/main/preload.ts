@@ -1,19 +1,19 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { ReadFileType, WriteFileType } from './ipc/types/file-manager-types';
+import { ReadFileModel, WriteCalendarFileModel } from './models/ipc-models';
 
 contextBridge.exposeInMainWorld('electron', {
   files: {
-    readCalendarFile: (fileInfo: ReadFileType) =>
+    readCalendarFile: (fileInfo: ReadFileModel) =>
       ipcRenderer.invoke('files:read-calendar-file', fileInfo),
-    readLegacyCalendarFile: (fileInfo: ReadFileType) =>
+    readLegacyCalendarFile: (fileInfo: ReadFileModel) =>
       ipcRenderer.invoke('files:read-legacy-file', fileInfo),
-    writeCalendarFile: (fileInfo: WriteFileType) =>
+    writeCalendarFile: (fileInfo: WriteCalendarFileModel) =>
       ipcRenderer.invoke('files:write-calendar-file', fileInfo),
-    writeFamilyCardPDF: (fileInfo: WriteFileType) =>
+    writeFamilyCardPDF: (fileInfo: WriteCalendarFileModel) =>
       ipcRenderer.invoke('files:write-family-pdf-file', fileInfo),
-    writeBusinessCardPDF: (fileInfo: WriteFileType) =>
+    writeBusinessCardPDF: (fileInfo: WriteCalendarFileModel) =>
       ipcRenderer.invoke('files:write-business-pdf-file', fileInfo),
-    writeClubCardPDF: (fileInfo: WriteFileType) =>
+    writeClubCardPDF: (fileInfo: WriteCalendarFileModel) =>
       ipcRenderer.invoke('files:write-club-pdf-file', fileInfo),
   },
   dialogs: {

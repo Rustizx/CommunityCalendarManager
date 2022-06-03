@@ -9,11 +9,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
 import CalendarModel from 'main/models/calendar-model';
-import {
-  EmptyBusinessCard,
-  EmptyClubCard,
-  EmptyFamilyCard,
-} from 'main/common/empty-cards';
+import EmptyCard from 'main/common/empty-cards';
 import { WriteCalendarFileModel } from 'main/models/ipc-models';
 import { fileVersion } from 'main/common/constants';
 
@@ -81,11 +77,9 @@ function MakePassword() {
         dateCreated: Date.now().toString(),
         dateModified: Date.now().toString(),
         version: fileVersion,
-        defaultFamilyCard: EmptyFamilyCard,
+        defaultCard: EmptyCard,
         familyCards: [],
-        defaultBusinessCard: EmptyBusinessCard,
         businessCards: [],
-        defaultClubCard: EmptyClubCard,
         clubCards: [],
       };
 

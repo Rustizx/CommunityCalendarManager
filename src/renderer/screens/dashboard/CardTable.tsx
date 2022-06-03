@@ -1,4 +1,5 @@
 import { ChangeEventHandler, useState } from 'react';
+import { DashboardScreensTypes as ScreenTypes } from 'main/common/screen-types';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -10,10 +11,6 @@ import Modal from 'react-bootstrap/Modal';
 import Col from 'react-bootstrap/Col';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
-import {
-  expandFamilyCard,
-  unexpandFamilyCard,
-} from 'main/services/cards/family-cards';
 import generateUniqSerial from 'main/services/generate-uuid';
 import {
   calendarEventMonths,
@@ -21,58 +18,63 @@ import {
   provinces,
 } from 'main/common/constants';
 import schema from 'main/common/form-schema';
-import { FamilyCardModel } from 'main/models/calendar-model';
+import CalendarModel, { CardModel } from 'main/models/calendar-model';
 import { WriteCalendarFileModel } from 'main/models/ipc-models';
 
 import routePaths from 'main/common/route-paths';
+import { expandCard, unexpandCard } from 'main/services/cards/card';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks/redux-hooks';
-import { addCard, setDefaultFamily } from '../../redux/store/calendar-slice';
+import { addCard, setDefaultCard } from '../../redux/store/calendar-slice';
 
-export default function FamilyCardsTable() {
-  const calendar = useAppSelector((state) => state.calendar);
+interface CardTableProps {
+  type: string;
+  calendar: CalendarModel;
+  cards: CardModel[];
+}
+
+export default function CardTable(props: CardTableProps) {
+  const { type, calendar, cards } = props;
   const general = useAppSelector((state) => state.general);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [searchBox, setSearchBox] = useState('');
-  const [results, setResults] = useState<FamilyCardModel[]>(
-    calendar.familyCards
-  );
-  const [selectedFamily, setSelectedFamily] = useState<FamilyCardModel>(
-    calendar.defaultFamilyCard
+  const [results, setResults] = useState<CardModel[]>(cards);
+  const [selectedCard, setSelectedCard] = useState<CardModel>(
+    calendar.defaultCard
   );
 
-  let fuse = new Fuse(calendar.familyCards, {
+  let fuse = new Fuse(cards, {
     shouldSort: true,
     findAllMatches: true,
-    keys: ['family_name', 'contacts[0].firstName', 'contacts[0].lastName'],
+    keys: ['name', 'contacts[0].firstName', 'contacts[0].lastName'],
   });
 
-  const [editFamily, setEditFamily] = useState(false);
+  const [editCard, setEditCard] = useState(false);
 
-  function handleOpenAddFamily() {
-    setSelectedFamily(expandFamilyCard(calendar.defaultFamilyCard, calendar));
-    setEditFamily(true);
+  function handleOpenAddCard() {
+    setSelectedCard(expandCard(calendar.defaultCard, calendar));
+    setEditCard(true);
   }
 
-  function handleOpenEditFamily(id: string) {
-    const findFamily = calendar.familyCards.find((x) => {
+  function handleOpenEditCard(id: string) {
+    const findCard = cards.find((x) => {
       return x.id === id;
     });
-    if (findFamily !== undefined) {
-      setSelectedFamily(expandFamilyCard(findFamily, calendar));
-      setEditFamily(true);
+    if (findCard !== undefined) {
+      setSelectedCard(expandCard(findCard, calendar));
+      setEditCard(true);
     }
   }
 
   function searchTable(value: string) {
     setSearchBox(value);
     if (value === '') {
-      setResults(calendar.familyCards);
-      fuse = new Fuse(calendar.familyCards, {
+      setResults(cards);
+      fuse = new Fuse(cards, {
         shouldSort: true,
         findAllMatches: true,
-        keys: ['family_name', 'contacts[0].firstName', 'contacts[0].lastName'],
+        keys: ['name', 'contacts[0].firstName', 'contacts[0].lastName'],
       });
     } else {
       const re = fuse.search(value);
@@ -85,36 +87,49 @@ export default function FamilyCardsTable() {
     navigate(routePaths.familyCards);
   }
 
-  function handleCloseEditFamily() {
-    setEditFamily(false);
+  function handleCloseEditCard() {
+    setEditCard(false);
     updateTable();
   }
 
-  function handleChangeFamily(values: FamilyCardModel) {
-    const cleanedFamilyCard = unexpandFamilyCard(values);
-    for (let l = 0; l < cleanedFamilyCard.contacts.length; l += 1) {
-      if (cleanedFamilyCard.contacts[l].lastName === '') {
-        cleanedFamilyCard.contacts[l].lastName = cleanedFamilyCard.family_name;
+  function handleChangeCard(values: CardModel) {
+    const cleanedCardCard = unexpandCard(values);
+    for (let l = 0; l < cleanedCardCard.contacts.length; l += 1) {
+      if (cleanedCardCard.contacts[l].lastName === '') {
+        cleanedCardCard.contacts[l].lastName = cleanedCardCard.name;
       }
     }
-    if (cleanedFamilyCard.id === '') {
-      cleanedFamilyCard.id = generateUniqSerial();
+    if (cleanedCardCard.id === '') {
+      cleanedCardCard.id = generateUniqSerial();
     }
-    if (cleanedFamilyCard.address.province === '') {
-      cleanedFamilyCard.address.province = provinces[0].value;
+    if (cleanedCardCard.address.province === '') {
+      cleanedCardCard.address.province = provinces[0].value;
     }
-    if (parseInt(cleanedFamilyCard.order.amountDonated, 10) > 0) {
-      cleanedFamilyCard.order.didDonated = true;
+    if (parseInt(cleanedCardCard.order.amountDonated, 10) > 0) {
+      cleanedCardCard.order.didDonated = true;
     }
-    const addFamily = calendar.familyCards.filter((x) => {
-      return x.id !== cleanedFamilyCard.id;
+    const addCardList = cards.filter((x) => {
+      return x.id !== cleanedCardCard.id;
     });
-    addFamily.push(cleanedFamilyCard);
+    addCardList.push(cleanedCardCard);
 
-    const tempCalendar = {
-      ...calendar,
-      familyCards: addFamily,
-    };
+    let tempCalendar: CalendarModel = { ...calendar };
+    if (type === ScreenTypes.FamilyCards) {
+      tempCalendar = {
+        ...calendar,
+        familyCards: addCardList,
+      };
+    } else if (type === ScreenTypes.BusinessCards) {
+      tempCalendar = {
+        ...calendar,
+        businessCards: addCardList,
+      };
+    } else {
+      tempCalendar = {
+        ...calendar,
+        clubCards: addCardList,
+      };
+    }
 
     const calendarWrite: WriteCalendarFileModel = {
       calendar: tempCalendar,
@@ -122,7 +137,7 @@ export default function FamilyCardsTable() {
       password: general.password,
     };
     dispatch(addCard(calendarWrite));
-    handleCloseEditFamily();
+    handleCloseEditCard();
   }
 
   const [count, setCount] = useState(3);
@@ -144,14 +159,27 @@ export default function FamilyCardsTable() {
   };
 
   function handleDelete(famID: string) {
-    const newFamilies = calendar.familyCards.filter((x) => {
+    const newCards = cards.filter((x) => {
       return x.id !== famID;
     });
 
-    const tempCalendar = {
-      ...calendar,
-      familyCards: newFamilies,
-    };
+    let tempCalendar: CalendarModel = { ...calendar };
+    if (type === ScreenTypes.FamilyCards) {
+      tempCalendar = {
+        ...calendar,
+        familyCards: newCards,
+      };
+    } else if (type === ScreenTypes.BusinessCards) {
+      tempCalendar = {
+        ...calendar,
+        businessCards: newCards,
+      };
+    } else {
+      tempCalendar = {
+        ...calendar,
+        clubCards: newCards,
+      };
+    }
 
     const calendarWrite: WriteCalendarFileModel = {
       calendar: tempCalendar,
@@ -159,27 +187,41 @@ export default function FamilyCardsTable() {
       password: general.password,
     };
     dispatch(addCard(calendarWrite));
-    handleCloseEditFamily();
+    handleCloseEditCard();
   }
 
-  function handleSetDefault(fam: FamilyCardModel) {
-    dispatch(setDefaultFamily(fam));
+  function handleSetDefault(fam: CardModel) {
+    dispatch(setDefaultCard(fam));
   }
 
   async function clickSavePDF() {
     const filePath: string =
       await window.electron.dialogs.createPDFFileDialog();
     if (filePath !== '') {
-      await window.electron.files.writeFamilyCardPDF({
-        path: filePath,
-        password: '',
-        calendar,
-      });
+      if (type === ScreenTypes.FamilyCards) {
+        await window.electron.files.writeFamilyCardPDF({
+          path: filePath,
+          password: '',
+          calendar,
+        });
+      } else if (type === ScreenTypes.BusinessCards) {
+        await window.electron.files.writeBusinessCardPDF({
+          path: filePath,
+          password: '',
+          calendar,
+        });
+      } else {
+        await window.electron.files.writeClubCardPDF({
+          path: filePath,
+          password: '',
+          calendar,
+        });
+      }
     }
   }
 
   const dateTable = (
-    values: FamilyCardModel,
+    values: CardModel,
     handleChange:
       | ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
       | undefined,
@@ -270,7 +312,7 @@ export default function FamilyCardsTable() {
           <Button
             className="card-options-items"
             variant="primary"
-            onClick={() => handleOpenAddFamily()}
+            onClick={() => handleOpenAddCard()}
           >
             Add New
           </Button>
@@ -293,7 +335,7 @@ export default function FamilyCardsTable() {
         <Table className="card-table" striped bordered hover size="sm">
           <thead>
             <tr>
-              <th>Family Name</th>
+              <th>{type} Name</th>
               <th>Name</th>
               <th>Phone</th>
               <th>Address</th>
@@ -303,24 +345,24 @@ export default function FamilyCardsTable() {
             </tr>
           </thead>
           <tbody>
-            {results.map((family) => {
+            {results.map((Card) => {
               return (
-                <tr key={family.id}>
-                  <td>{family.family_name}</td>
-                  <td>{`${family.contacts[0].firstName} ${family.contacts[0].lastName}`}</td>
+                <tr key={Card.id}>
+                  <td>{Card.name}</td>
+                  <td>{`${Card.contacts[0].firstName} ${Card.contacts[0].lastName}`}</td>
                   <td>
-                    {family.contactDetails.homePhone.replace(
+                    {Card.contactDetails.homePhone.replace(
                       /(\d{3})(\d{3})(\d{4})/,
                       '$1-$2-$3'
                     )}
                   </td>
-                  <td>{`${family.address.addressLine}, ${family.address.city}, ${family.address.province}`}</td>
-                  <td>{`${family.calendarEvents.length}`}</td>
-                  <td>{`${family.order.amountOfCalendarsPurchased}`}</td>
+                  <td>{`${Card.address.addressLine}, ${Card.address.city}, ${Card.address.province}`}</td>
+                  <td>{`${Card.calendarEvents.length}`}</td>
+                  <td>{`${Card.order.amountOfCalendarsPurchased}`}</td>
                   <td>
                     <Button
                       id="dropdown-split-variants-primary"
-                      onClick={() => handleOpenEditFamily(family.id)}
+                      onClick={() => handleOpenEditCard(Card.id)}
                       variant="primary"
                       style={{ height: '35px' }}
                     >
@@ -334,8 +376,8 @@ export default function FamilyCardsTable() {
         </Table>
       </div>
       <Modal
-        show={editFamily}
-        onHide={() => handleCloseEditFamily()}
+        show={editCard}
+        onHide={() => handleCloseEditCard()}
         fullscreen
         dialogClassName="card-modal"
         backdrop="static"
@@ -343,9 +385,9 @@ export default function FamilyCardsTable() {
       >
         <Modal.Header closeButton>
           <Modal.Title className="card-title">
-            {selectedFamily.family_name !== ''
-              ? `Editing the ${selectedFamily.family_name} Family`
-              : `Adding a New Family`}
+            {selectedCard.name !== ''
+              ? `Editing the ${selectedCard.name} Card`
+              : `Adding a New Card`}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -353,7 +395,7 @@ export default function FamilyCardsTable() {
             validationSchema={schema}
             // eslint-disable-next-line no-console
             onSubmit={(values) => console.log(values)}
-            initialValues={selectedFamily}
+            initialValues={selectedCard}
           >
             {({
               setFieldValue,
@@ -376,14 +418,14 @@ export default function FamilyCardsTable() {
                       className="form-component"
                       controlId="validationFormik01"
                     >
-                      <Form.Label className="form-text">Family Name</Form.Label>
+                      <Form.Label className="form-text">{type} Name</Form.Label>
                       <Form.Control
                         type="text"
-                        name="family_name"
-                        placeholder="Family Name"
-                        value={values.family_name}
+                        name="name"
+                        placeholder={`${type} Name`}
+                        value={values.name}
                         onChange={handleChange}
-                        isInvalid={!!errors.family_name}
+                        isInvalid={!!errors.name}
                       />
                     </Form.Group>
                     <Form.Group
@@ -455,7 +497,7 @@ export default function FamilyCardsTable() {
                           placeholder="Last Name"
                           value={
                             values.contacts[0].lastName === ''
-                              ? values.family_name
+                              ? values.name
                               : values.contacts[0].lastName
                           }
                           onChange={handleChange}
@@ -494,7 +536,7 @@ export default function FamilyCardsTable() {
                           placeholder="Last Name"
                           value={
                             values.contacts[1].lastName === ''
-                              ? values.family_name
+                              ? values.name
                               : values.contacts[1].lastName
                           }
                           onChange={handleChange}
@@ -662,7 +704,7 @@ export default function FamilyCardsTable() {
                   <Col md="2">
                     <Button
                       type="submit"
-                      onClick={() => handleChangeFamily(values)}
+                      onClick={() => handleChangeCard(values)}
                       style={{ width: '100%' }}
                     >
                       Submit
@@ -679,12 +721,12 @@ export default function FamilyCardsTable() {
                       Reset
                     </Button>
                   </Col>
-                  {selectedFamily.id === '' && (
+                  {selectedCard.id === '' && (
                     <Col md="1">
                       <Button
                         type="button"
                         variant="outline-info"
-                        onClick={() => handleSetDefault(selectedFamily)}
+                        onClick={() => handleSetDefault(selectedCard)}
                         style={{ width: '100%' }}
                       >
                         Set Default
@@ -695,7 +737,7 @@ export default function FamilyCardsTable() {
                     <Button
                       type="button"
                       variant="outline-danger"
-                      onClick={() => handleDelete(selectedFamily.id)}
+                      onClick={() => handleDelete(selectedCard.id)}
                       style={{ width: '100%' }}
                     >
                       Delete

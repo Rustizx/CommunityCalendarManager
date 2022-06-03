@@ -1,14 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {
-  EmptyBusinessCard,
-  EmptyClubCard,
-  EmptyFamilyCard,
-} from 'main/common/empty-cards';
-import CalendarModel, {
-  BusinessCardModel,
-  ClubCardModel,
-  FamilyCardModel,
-} from 'main/models/calendar-model';
+import EmptyCard from 'main/common/empty-cards';
+import CalendarModel, { CardModel } from 'main/models/calendar-model';
 import { WriteCalendarFileModel } from 'main/models/ipc-models';
 import CalendarService from '../services/calendar-service';
 
@@ -17,11 +9,9 @@ const intialCalendarState: CalendarModel = {
   dateCreated: '',
   dateModified: '',
   version: '',
-  defaultFamilyCard: EmptyFamilyCard,
+  defaultCard: EmptyCard,
   familyCards: [],
-  defaultBusinessCard: EmptyBusinessCard,
   businessCards: [],
-  defaultClubCard: EmptyClubCard,
   clubCards: [],
 };
 
@@ -34,29 +24,21 @@ const calendarSlice = createSlice({
       state.dateCreated = action.payload.dateCreated;
       state.dateModified = action.payload.dateModified;
       state.version = action.payload.version;
-      state.defaultFamilyCard = action.payload.defaultFamilyCard;
+      state.defaultCard = action.payload.defaultCard;
       state.familyCards = action.payload.familyCards;
-      state.defaultBusinessCard = action.payload.defaultBusinessCard;
       state.businessCards = action.payload.businessCards;
-      state.defaultClubCard = action.payload.defaultClubCard;
       state.clubCards = action.payload.clubCards;
     },
-    setDefaultFamily(state, action: PayloadAction<FamilyCardModel>) {
-      state.defaultFamilyCard = action.payload;
+    setDefaultCard(state, action: PayloadAction<CardModel>) {
+      state.defaultCard = action.payload;
     },
-    setDefaultBusiness(state, action: PayloadAction<BusinessCardModel>) {
-      state.defaultBusinessCard = action.payload;
-    },
-    setDefaultClub(state, action: PayloadAction<ClubCardModel>) {
-      state.defaultClubCard = action.payload;
-    },
-    setFamilyCards(state, action: PayloadAction<FamilyCardModel[]>) {
+    setFamilyCards(state, action: PayloadAction<CardModel[]>) {
       state.familyCards = action.payload;
     },
-    setBusinessCards(state, action: PayloadAction<BusinessCardModel[]>) {
+    setBusinessCards(state, action: PayloadAction<CardModel[]>) {
       state.businessCards = action.payload;
     },
-    setClubCards(state, action: PayloadAction<ClubCardModel[]>) {
+    setClubCards(state, action: PayloadAction<CardModel[]>) {
       state.clubCards = action.payload;
     },
     addCard(state, action: PayloadAction<WriteCalendarFileModel>) {
@@ -74,11 +56,9 @@ const calendarSlice = createSlice({
       state.dateCreated = intialCalendarState.dateCreated;
       state.dateModified = intialCalendarState.dateModified;
       state.version = intialCalendarState.version;
-      state.defaultFamilyCard = intialCalendarState.defaultFamilyCard;
+      state.defaultCard = intialCalendarState.defaultCard;
       state.familyCards = intialCalendarState.familyCards;
-      state.defaultBusinessCard = intialCalendarState.defaultBusinessCard;
       state.businessCards = intialCalendarState.businessCards;
-      state.defaultClubCard = intialCalendarState.defaultClubCard;
       state.clubCards = intialCalendarState.clubCards;
     },
   },
@@ -86,9 +66,7 @@ const calendarSlice = createSlice({
 
 export const {
   setCalendar,
-  setDefaultFamily,
-  setDefaultBusiness,
-  setDefaultClub,
+  setDefaultCard,
   setFamilyCards,
   setBusinessCards,
   setClubCards,

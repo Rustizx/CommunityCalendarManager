@@ -1,16 +1,21 @@
-import { ReadFileType, WriteFileType } from 'main/ipc/types/file-manager-types';
-import { ImportCalendarModel } from './models/redux-models';
+import {
+  ReadFileModel,
+  WriteCalendarFileModel,
+  ImportCalendarModel,
+} from 'main/models/ipc-models';
 
 declare global {
   interface Window {
     electron: {
       files: {
-        readCalendarFile(fileInfo: ReadFileType): ImportCalendarModel;
-        writeCalendarFile(fileInfo: WriteFileType): ImportCalendarModel;
-        writeFamilyCardPDF(fileInfo: WriteFileType): string;
-        writeBusinessCardPDF(fileInfo: WriteFileType): string;
-        writeClubCardPDF(fileInfo: WriteFileType): string;
-        readLegacyCalendarFile(fileInfo: ReadFileType): ImportCalendarModel;
+        readCalendarFile(fileInfo: ReadFileModel): ImportCalendarModel;
+        writeCalendarFile(
+          fileInfo: WriteCalendarFileModel
+        ): ImportCalendarModel;
+        writeFamilyCardPDF(fileInfo: WriteCalendarFileModel): string;
+        writeBusinessCardPDF(fileInfo: WriteCalendarFileModel): string;
+        writeClubCardPDF(fileInfo: WriteCalendarFileModel): string;
+        readLegacyCalendarFile(fileInfo: ReadFileModel): ImportCalendarModel;
       };
       dialogs: {
         openCalendarFileDialog(): string;

@@ -4,7 +4,7 @@ import Col from 'react-bootstrap/Col';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
 
-import { BusinessCardModel, FamilyCardModel } from 'main/models/calendar-model';
+import { CardModel } from 'main/models/calendar-model';
 import {
   ImportCalendarModel,
   WriteCalendarFileModel,
@@ -41,8 +41,8 @@ export default function DashboardTemplate(props: DashboardTemplateProps) {
     const legacyCalendar: ImportCalendarModel =
       await CalendarService.readLegacyCalendarFile(filePath);
 
-    const addFamily: FamilyCardModel[] = [];
-    const addBusiness: BusinessCardModel[] = [];
+    const addFamily: CardModel[] = [];
+    const addBusiness: CardModel[] = [];
 
     if (legacyCalendar.calendar !== undefined) {
       for (let x = 0; x < legacyCalendar.calendar.familyCards.length; x += 1) {
