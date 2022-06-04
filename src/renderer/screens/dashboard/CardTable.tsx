@@ -1,4 +1,5 @@
-import { ChangeEventHandler, useState } from 'react';
+/* eslint-disable no-nested-ternary */
+import { ChangeEventHandler, useEffect, useState } from 'react';
 import { DashboardScreensTypes as ScreenTypes } from 'main/common/screen-types';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
@@ -34,12 +35,18 @@ interface CardTableProps {
 
 export default function CardTable(props: CardTableProps) {
   const { type, calendar, cards } = props;
+
   const general = useAppSelector((state) => state.general);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [searchBox, setSearchBox] = useState('');
   const [results, setResults] = useState<CardModel[]>(cards);
+
+  useEffect(() => {
+    setResults(cards);
+  }, [cards]);
+
   const [selectedCard, setSelectedCard] = useState<CardModel>(
     calendar.defaultCard
   );
