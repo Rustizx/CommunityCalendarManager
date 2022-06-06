@@ -8,6 +8,7 @@ const routePaths = {
   businessCards: '/dashboard/cards/business',
   clubCards: '/dashboard/cards/club',
   list: '/dashboard/list',
+  raw: '/dashboard/raw',
 };
 
 export default routePaths;

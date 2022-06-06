@@ -1,6 +1,6 @@
-import { ChangeEventHandler, useState } from 'react';
+/* eslint-disable no-nested-ternary */
+import { ChangeEventHandler, useEffect, useState } from 'react';
 import { DashboardScreensTypes as ScreenTypes } from 'main/common/screen-types';
-import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
@@ -21,34 +21,63 @@ import schema from 'main/common/form-schema';
 import CalendarModel, { CardModel } from 'main/models/calendar-model';
 import { WriteCalendarFileModel } from 'main/models/ipc-models';
 
-import routePaths from 'main/common/route-paths';
 import { expandCard, unexpandCard } from 'main/services/cards/card';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks/redux-hooks';
 import { addCard, setDefaultCard } from '../../redux/store/calendar-slice';
 
 interface CardTableProps {
   type: string;
-  calendar: CalendarModel;
-  cards: CardModel[];
 }
 
 export default function CardTable(props: CardTableProps) {
-  const { type, calendar, cards } = props;
+  const { type } = props;
   const general = useAppSelector((state) => state.general);
+  const calendar = useAppSelector((state) => state.calendar);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const [searchBox, setSearchBox] = useState('');
-  const [results, setResults] = useState<CardModel[]>(cards);
+  const [cards, setCards] = useState<CardModel[]>([]);
+  const [results, setResults] = useState<CardModel[]>([]);
+  const [fuse, setFuse] = useState<Fuse<CardModel>>(new Fuse(cards));
   const [selectedCard, setSelectedCard] = useState<CardModel>(
     calendar.defaultCard
   );
 
-  let fuse = new Fuse(cards, {
-    shouldSort: true,
-    findAllMatches: true,
-    keys: ['name', 'contacts[0].firstName', 'contacts[0].lastName'],
-  });
+  function findCards(ty: string): CardModel[] {
+    let c;
+    if (ty === ScreenTypes.FamilyCards) c = calendar.familyCards;
+    else if (ty === ScreenTypes.BusinessCards) c = calendar.businessCards;
+    else c = calendar.clubCards;
+    return c;
+  }
+
+  useEffect(() => {
+    setCards(findCards(type));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [calendar, type]);
+
+  useEffect(() => {
+    setFuse(
+      new Fuse(cards, {
+        shouldSort: true,
+        findAllMatches: true,
+        keys: ['name', 'contacts[0].firstName', 'contacts[0].lastName'],
+      })
+    );
+    setResults(cards);
+    setSearchBox('');
+  }, [cards]);
+
+  useEffect(() => {
+    if (searchBox !== '') {
+      const re = fuse.search(searchBox);
+      const characterResults = re.map((character) => character.item);
+      setResults(characterResults);
+    } else {
+      setResults(cards);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchBox]);
 
   const [editCard, setEditCard] = useState(false);
 
@@ -69,27 +98,10 @@ export default function CardTable(props: CardTableProps) {
 
   function searchTable(value: string) {
     setSearchBox(value);
-    if (value === '') {
-      setResults(cards);
-      fuse = new Fuse(cards, {
-        shouldSort: true,
-        findAllMatches: true,
-        keys: ['name', 'contacts[0].firstName', 'contacts[0].lastName'],
-      });
-    } else {
-      const re = fuse.search(value);
-      const characterResults = re.map((character) => character.item);
-      setResults(characterResults);
-    }
-  }
-
-  async function updateTable() {
-    navigate(routePaths.familyCards);
   }
 
   function handleCloseEditCard() {
     setEditCard(false);
-    updateTable();
   }
 
   function handleChangeCard(values: CardModel) {
@@ -192,6 +204,74 @@ export default function CardTable(props: CardTableProps) {
 
   function handleSetDefault(fam: CardModel) {
     dispatch(setDefaultCard(fam));
+  }
+
+  async function handleSwitchCard(values: CardModel, ty: string) {
+    const cleanedCardCard = unexpandCard(values);
+    for (let l = 0; l < cleanedCardCard.contacts.length; l += 1) {
+      if (cleanedCardCard.contacts[l].lastName === '') {
+        cleanedCardCard.contacts[l].lastName = cleanedCardCard.name;
+      }
+    }
+    if (cleanedCardCard.id === '') {
+      cleanedCardCard.id = generateUniqSerial();
+    }
+    if (cleanedCardCard.address.province === '') {
+      cleanedCardCard.address.province = provinces[0].value;
+    }
+    if (parseInt(cleanedCardCard.order.amountDonated, 10) > 0) {
+      cleanedCardCard.order.didDonated = true;
+    }
+    const addCardList = findCards(ty).filter((x) => {
+      return x.id !== cleanedCardCard.id;
+    });
+    addCardList.push(cleanedCardCard);
+    const newCards = cards.filter((x) => {
+      return x.id !== values.id;
+    });
+
+    let tempCalendar: CalendarModel = { ...calendar };
+    if (ty === ScreenTypes.FamilyCards) {
+      tempCalendar = {
+        ...calendar,
+        familyCards: addCardList,
+      };
+    } else if (ty === ScreenTypes.BusinessCards) {
+      tempCalendar = {
+        ...calendar,
+        businessCards: addCardList,
+      };
+    } else {
+      tempCalendar = {
+        ...calendar,
+        clubCards: addCardList,
+      };
+    }
+
+    if (type === ScreenTypes.FamilyCards) {
+      tempCalendar = {
+        ...tempCalendar,
+        familyCards: newCards,
+      };
+    } else if (type === ScreenTypes.BusinessCards) {
+      tempCalendar = {
+        ...tempCalendar,
+        businessCards: newCards,
+      };
+    } else {
+      tempCalendar = {
+        ...tempCalendar,
+        clubCards: newCards,
+      };
+    }
+
+    const calendarWrite: WriteCalendarFileModel = {
+      calendar: tempCalendar,
+      path: general.path,
+      password: general.password,
+    };
+    dispatch(addCard(calendarWrite));
+    handleCloseEditCard();
   }
 
   async function clickSavePDF() {
@@ -349,7 +429,7 @@ export default function CardTable(props: CardTableProps) {
               return (
                 <tr key={Card.id}>
                   <td>{Card.name}</td>
-                  <td>{`${Card.contacts[0].firstName} ${Card.contacts[0].lastName}`}</td>
+                  <td>{`${Card.contacts[0]?.firstName} ${Card.contacts[0]?.lastName}`}</td>
                   <td>
                     {Card.contactDetails.homePhone.replace(
                       /(\d{3})(\d{3})(\d{4})/,
@@ -497,7 +577,9 @@ export default function CardTable(props: CardTableProps) {
                           placeholder="Last Name"
                           value={
                             values.contacts[0].lastName === ''
-                              ? values.name
+                              ? type === ScreenTypes.FamilyCards
+                                ? values.name
+                                : ''
                               : values.contacts[0].lastName
                           }
                           onChange={handleChange}
@@ -536,7 +618,9 @@ export default function CardTable(props: CardTableProps) {
                           placeholder="Last Name"
                           value={
                             values.contacts[1].lastName === ''
-                              ? values.name
+                              ? type === ScreenTypes.FamilyCards
+                                ? values.name
+                                : ''
                               : values.contacts[1].lastName
                           }
                           onChange={handleChange}
@@ -708,6 +792,42 @@ export default function CardTable(props: CardTableProps) {
                       style={{ width: '100%' }}
                     >
                       Submit
+                    </Button>
+                  </Col>
+                  <Col md="1">
+                    <Button
+                      type="button"
+                      variant="warning"
+                      onClick={() =>
+                        handleSwitchCard(values, ScreenTypes.FamilyCards)
+                      }
+                      style={{ width: '100%' }}
+                    >
+                      Switch to Family
+                    </Button>
+                  </Col>
+                  <Col md="1">
+                    <Button
+                      type="button"
+                      variant="warning"
+                      onClick={() =>
+                        handleSwitchCard(values, ScreenTypes.BusinessCards)
+                      }
+                      style={{ width: '100%' }}
+                    >
+                      Switch to Business
+                    </Button>
+                  </Col>
+                  <Col md="1">
+                    <Button
+                      type="button"
+                      variant="warning"
+                      onClick={() =>
+                        handleSwitchCard(values, ScreenTypes.ClubCards)
+                      }
+                      style={{ width: '100%' }}
+                    >
+                      Switch to Club
                     </Button>
                   </Col>
                   <Col md="1">

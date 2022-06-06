@@ -5,6 +5,7 @@ import DashboardTemplate from '../../components/dashboard/DashboardTemplate';
 import Home from './Home';
 import ListTable from './ListTable';
 import CardTable from './CardTable';
+import RawScreen from './Raw';
 
 interface DashboardSwitcherProps {
   screen: ScreenTypes;
@@ -21,34 +22,19 @@ export default function DashboardSwitcher(props: DashboardSwitcherProps) {
       content = <Home />;
       break;
     case ScreenTypes.FamilyCards:
-      content = (
-        <CardTable
-          type={ScreenTypes.FamilyCards}
-          calendar={calendar}
-          cards={calendar.familyCards}
-        />
-      );
+      content = <CardTable type={ScreenTypes.FamilyCards} />;
       break;
     case ScreenTypes.BusinessCards:
-      content = (
-        <CardTable
-          type={ScreenTypes.BusinessCards}
-          calendar={calendar}
-          cards={calendar.businessCards}
-        />
-      );
+      content = <CardTable type={ScreenTypes.BusinessCards} />;
       break;
     case ScreenTypes.ClubCards:
-      content = (
-        <CardTable
-          type={ScreenTypes.ClubCards}
-          calendar={calendar}
-          cards={calendar.clubCards}
-        />
-      );
+      content = <CardTable type={ScreenTypes.ClubCards} />;
       break;
     case ScreenTypes.List:
       content = <ListTable />;
+      break;
+    case ScreenTypes.Raw:
+      content = <RawScreen />;
       break;
     default:
       content = <></>;

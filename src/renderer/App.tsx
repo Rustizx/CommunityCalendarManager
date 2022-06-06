@@ -54,6 +54,10 @@ export default function App() {
           path={routePaths.list}
           element={<Dashboard screen={DashboardScreensTypes.List} />}
         />
+        <Route
+          path={routePaths.raw}
+          element={<Dashboard screen={DashboardScreensTypes.Raw} />}
+        />
       </Routes>
     </Router>
   );
