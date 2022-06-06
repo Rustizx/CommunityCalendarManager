@@ -11,5 +11,4 @@ export enum DashboardScreensTypes {
   BusinessCards = 'Business',
   ClubCards = 'Club',
   List = 'List',
-  Raw = 'Raw',
 }

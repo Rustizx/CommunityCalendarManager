@@ -2,6 +2,7 @@ import {
   ReadFileModel,
   WriteCalendarFileModel,
   ImportCalendarModel,
+  WriteCSVFileModel,
 } from 'main/models/ipc-models';
 
 declare global {
@@ -16,11 +17,13 @@ declare global {
         writeBusinessCardPDF(fileInfo: WriteCalendarFileModel): string;
         writeClubCardPDF(fileInfo: WriteCalendarFileModel): string;
         readLegacyCalendarFile(fileInfo: ReadFileModel): ImportCalendarModel;
+        writeCSV(fileInfo: WriteCSVFileModel): string;
       };
       dialogs: {
         openCalendarFileDialog(): string;
         createCalendarFileDialog(): string;
         createPDFFileDialog(): string;
+        createCSVDialog(): string;
       };
     };
   }

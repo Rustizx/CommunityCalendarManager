@@ -25,3 +25,8 @@ export interface ImportCalendarModel {
   status: string;
   calendar?: CalendarModel;
 }
+
+export interface WriteCSVFileModel {
+  path: string;
+  events: CalendarEventModel[];
+}

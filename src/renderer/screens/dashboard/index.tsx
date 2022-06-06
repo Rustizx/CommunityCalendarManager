@@ -1,11 +1,9 @@
 import { DashboardScreensTypes as ScreenTypes } from 'main/common/screen-types';
-import { useAppSelector } from 'renderer/redux/hooks/redux-hooks';
 import DashboardTemplate from '../../components/dashboard/DashboardTemplate';
 
 import Home from './Home';
 import ListTable from './ListTable';
 import CardTable from './CardTable';
-import RawScreen from './Raw';
 
 interface DashboardSwitcherProps {
   screen: ScreenTypes;
@@ -14,8 +12,6 @@ interface DashboardSwitcherProps {
 export default function DashboardSwitcher(props: DashboardSwitcherProps) {
   const { screen } = props;
   let content;
-
-  const calendar = useAppSelector((state) => state.calendar);
 
   switch (screen) {
     case ScreenTypes.Home:
@@ -32,9 +28,6 @@ export default function DashboardSwitcher(props: DashboardSwitcherProps) {
       break;
     case ScreenTypes.List:
       content = <ListTable />;
-      break;
-    case ScreenTypes.Raw:
-      content = <RawScreen />;
       break;
     default:
       content = <></>;

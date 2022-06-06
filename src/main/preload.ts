@@ -1,5 +1,9 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { ReadFileModel, WriteCalendarFileModel } from './models/ipc-models';
+import {
+  ReadFileModel,
+  WriteCalendarFileModel,
+  WriteCSVFileModel,
+} from './models/ipc-models';
 
 contextBridge.exposeInMainWorld('electron', {
   files: {
@@ -15,6 +19,8 @@ contextBridge.exposeInMainWorld('electron', {
       ipcRenderer.invoke('files:write-business-pdf-file', fileInfo),
     writeClubCardPDF: (fileInfo: WriteCalendarFileModel) =>
       ipcRenderer.invoke('files:write-club-pdf-file', fileInfo),
+    writeCSV: (fileInfo: WriteCSVFileModel) =>
+      ipcRenderer.invoke('files:write-csv-file', fileInfo),
   },
   dialogs: {
     openCalendarFileDialog: () =>
@@ -22,5 +28,6 @@ contextBridge.exposeInMainWorld('electron', {
     createCalendarFileDialog: () =>
       ipcRenderer.invoke('dialog:create-calender-file'),
     createPDFFileDialog: () => ipcRenderer.invoke('dialog:create-pdf-file'),
+    createCSVDialog: () => ipcRenderer.invoke('dialog:create-csv-file'),
   },
 });

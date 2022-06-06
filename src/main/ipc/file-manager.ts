@@ -1,16 +1,19 @@
 import { ipcMain } from 'electron';
+import { Parser } from 'json2csv';
 import { months } from '../common/constants';
 import EmptyCard from '../common/empty-cards';
 import { LegacyFamilyModels } from '../models/legacy-calendar-model';
 import CalendarModel, {
   CalendarEventModel,
   CardModel,
+  ExportableCalendarEventModel,
 } from '../models/calendar-model';
 import {
   EncryptedFileModel,
   ImportCalendarModel,
   ReadFileModel,
   WriteCalendarFileModel,
+  WriteCSVFileModel,
 } from '../models/ipc-models';
 import { encrypt, decrypt } from './service/encryption';
 import { familyCardsPDF, businessCardsPDF, clubCardsPDF } from './service/pdf';
@@ -219,6 +222,26 @@ function writeClubCardPDF(fileInfo: WriteCalendarFileModel): boolean {
   }
 }
 
+function writeCSVFile(fileInfo: WriteCSVFileModel): boolean {
+  try {
+    const csv = new Parser();
+    const list: ExportableCalendarEventModel[] = [];
+    fileInfo.events.forEach((event) => {
+      list.push({
+        name: event.name,
+        type: event.type,
+        date: `${event.date.month.slice(0, 3)} ${event.date.day}`,
+      });
+    });
+    fs.writeFileSync(fileInfo.path, csv.parse(list), {
+      encoding: 'utf8',
+    });
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
 export default function FileManager() {
   ipcMain.handle('files:write-calendar-file', (_event, args) => {
     return writeCalendarFile(args);
@@ -237,5 +260,8 @@ export default function FileManager() {
   });
   ipcMain.handle('files:read-legacy-file', (_event, args) => {
     return readLegacyCalendarFile(args);
+  });
+  ipcMain.handle('files:write-csv-file', (_event, args) => {
+    return writeCSVFile(args);
   });
 }

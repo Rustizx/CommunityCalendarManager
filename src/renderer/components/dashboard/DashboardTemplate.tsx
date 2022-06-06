@@ -169,22 +169,6 @@ export default function DashboardTemplate(props: DashboardTemplateProps) {
               List
             </span>
           </div>
-          <div
-            role="button"
-            onClick={() => navigate(routePaths.raw)}
-            onKeyDown={() => navigate(routePaths.raw)}
-            tabIndex={-1}
-          >
-            <span
-              className={
-                screenType === ScreenTypes.Raw
-                  ? 'navbar-link-selected'
-                  : 'navbar-link'
-              }
-            >
-              Raw
-            </span>
-          </div>
         </Col>
         <Col className="navbar-right">
           <VerticalLine height={42} className="navbar-line" />

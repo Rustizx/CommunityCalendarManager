@@ -44,8 +44,23 @@ async function createPDFFileDialog() {
   return filePath;
 }
 
+async function createCSVDialog() {
+  const { canceled, filePath } = await dialog.showSaveDialog({
+    title: 'Create CSV',
+    filters: [
+      { name: 'PDF File', extensions: ['csv'] },
+      { name: 'All Files', extensions: ['*'] },
+    ],
+  });
+  if (canceled) {
+    return '';
+  }
+  return filePath;
+}
+
 export default function Dialogs() {
   ipcMain.handle('dialog:open-calender-file', openCalendarFileDialog);
   ipcMain.handle('dialog:create-calender-file', createCalendarFileDialog);
   ipcMain.handle('dialog:create-pdf-file', createPDFFileDialog);
+  ipcMain.handle('dialog:create-csv-file', createCSVDialog);
 }

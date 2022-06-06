@@ -7,6 +7,12 @@ export interface CalendarEventModel {
   type: string;
   date: DateModel;
 }
+
+export interface ExportableCalendarEventModel {
+  name: string;
+  type: string;
+  date: string;
+}
 export interface AddressModel {
   addressLine: string;
   city: string;
