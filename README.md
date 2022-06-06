@@ -1,12 +1,12 @@
-<h1> CalFunder </h1>
+# **CalFunder**
 
-<br>
+<div style="margin: 10px; display:flex; flex-direction: row; flex-wrap: wrap; justify-content: space-around; height: 325px;">
+  <img style="flex-shrink: 0;" src="assets/readme/start.png"/><img style="flex-shrink: 0;" src="assets/readme/dashboard.png"/>
+</div>
 
-<p>
-  Manage all aspects of a community calendar. To be used for community calendar fundrasiers.
-</p>
-
-<br>
+<div style="margin: 10px; display:flex; flex-direction: row; flex-wrap: wrap; justify-content: space-around; height: 325px;">
+  <img style="flex-shrink: 0;" src="assets/readme/new.png"/>
+</div>
 
 <div align="center">
 
@@ -14,6 +14,14 @@
 [![Github Tag][github-tag-image]][github-tag-url]
 
 </div>
+
+---
+
+<p>
+CalFunder is a cross-platform application that makes it easy to create and manage a community calendar.
+</p>
+
+<br>
 
 ## Create Your Own Package
 
