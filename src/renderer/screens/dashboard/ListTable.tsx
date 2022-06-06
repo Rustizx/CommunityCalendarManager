@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-console */
 import { CalendarEventModel } from 'main/models/calendar-model';
 import generateUniqSerial from 'main/services/generate-uuid';
 import sortEvents from 'main/services/sort-calendar-events';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 
@@ -28,39 +29,51 @@ export default function ListTable() {
     const l: CalendarEventModel[] = [];
     const fam = calendar.businessCards;
     for (let i = 0; i < fam.length; i += 1) {
-      if (parseInt(fam[i].order.amountOfCalendarsPurchased, 10) > 0) {
-        for (let x = 0; x < fam[i].calendarEvents.length; x += 1) {
-          l.push(fam[i].calendarEvents[x]);
-        }
+      for (let x = 0; x < fam[i].calendarEvents.length; x += 1) {
+        l.push(fam[i].calendarEvents[x]);
       }
     }
     return l;
   }
 
-  function fetchClubCardEvents() {
-    const l: CalendarEventModel[] = [];
-    const fam = calendar.clubCards;
-    for (let i = 0; i < fam.length; i += 1) {
-      if (parseInt(fam[i].order.amountOfCalendarsPurchased, 10) > 0) {
-        for (let x = 0; x < fam[i].calendarEvents.length; x += 1) {
-          l.push(fam[i].calendarEvents[x]);
-        }
-      }
-    }
-    return l;
-  }
+  // function fetchClubCardEvents() {
+  //   const l: CalendarEventModel[] = [];
+  //   const fam = calendar.clubCards;
+  //   for (let i = 0; i < fam.length; i += 1) {
+  //     if (parseInt(fam[i].order.amountOfCalendarsPurchased, 10) > 0) {
+  //       for (let x = 0; x < fam[i].calendarEvents.length; x += 1) {
+  //         l.push(fam[i].calendarEvents[x]);
+  //       }
+  //     }
+  //   }
+  //   return l;
+  // }
 
   function fetchEvents() {
     const empty: CalendarEventModel[] = [];
     const events = empty.concat(
       fetchFamilyCardEvents(),
-      fetchBusinessCardEvents(),
-      fetchClubCardEvents()
+      fetchBusinessCardEvents()
+      // fetchClubCardEvents()
     );
     return sortEvents(events);
   }
 
-  const [list] = useState<CalendarEventModel[]>(fetchEvents());
+  const [list, setList] = useState<CalendarEventModel[]>([]);
+
+  useEffect(() => {
+    setList(fetchEvents());
+  }, [calendar]);
+
+  async function clickSaveCSV() {
+    const filePath: string = await window.electron.dialogs.createCSVDialog();
+    if (filePath !== '') {
+      await window.electron.files.writeCSV({
+        path: filePath,
+        events: list,
+      });
+    }
+  }
 
   return (
     <div className="card-container">
@@ -68,7 +81,7 @@ export default function ListTable() {
         <Button
           className="card-options-items"
           variant="primary"
-          onClick={() => console.log('Export CSV')}
+          onClick={() => clickSaveCSV()}
         >
           Export CSV
         </Button>

@@ -7,6 +7,12 @@ export interface CalendarEventModel {
   type: string;
   date: DateModel;
 }
+
+export interface ExportableCalendarEventModel {
+  name: string;
+  type: string;
+  date: string;
+}
 export interface AddressModel {
   addressLine: string;
   city: string;
@@ -30,29 +36,9 @@ export interface OrderModel {
   didDonated: boolean;
 }
 
-export interface FamilyCardModel {
+export interface CardModel {
   id: string;
-  family_name: string;
-  contacts: ContactModel[];
-  contactDetails: ContactDetailModel;
-  address: AddressModel;
-  calendarEvents: CalendarEventModel[];
-  order: OrderModel;
-}
-
-export interface BusinessCardModel {
-  id: string;
-  business_name: string;
-  contacts: ContactModel[];
-  contactDetails: ContactDetailModel;
-  address: AddressModel;
-  calendarEvents: CalendarEventModel[];
-  order: OrderModel;
-}
-
-export interface ClubCardModel {
-  id: string;
-  club_name: string;
+  name: string;
   contacts: ContactModel[];
   contactDetails: ContactDetailModel;
   address: AddressModel;
@@ -65,10 +51,8 @@ export default interface CalendarModel {
   dateCreated: string;
   dateModified: string;
   version: string;
-  defaultFamilyCard: FamilyCardModel;
-  familyCards: FamilyCardModel[];
-  defaultBusinessCard: BusinessCardModel;
-  businessCards: BusinessCardModel[];
-  defaultClubCard: ClubCardModel;
-  clubCards: ClubCardModel[];
+  defaultCard: CardModel;
+  familyCards: CardModel[];
+  businessCards: CardModel[];
+  clubCards: CardModel[];
 }

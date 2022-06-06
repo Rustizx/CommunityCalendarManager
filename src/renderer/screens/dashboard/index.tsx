@@ -2,10 +2,8 @@ import { DashboardScreensTypes as ScreenTypes } from 'main/common/screen-types';
 import DashboardTemplate from '../../components/dashboard/DashboardTemplate';
 
 import Home from './Home';
-import BusinessCardsTable from './BusinessCardsTable';
-import ClubCardsTable from './ClubCardsTable';
-import FamilyCardsTable from './FamilyCardsTable';
 import ListTable from './ListTable';
+import CardTable from './CardTable';
 
 interface DashboardSwitcherProps {
   screen: ScreenTypes;
@@ -20,13 +18,13 @@ export default function DashboardSwitcher(props: DashboardSwitcherProps) {
       content = <Home />;
       break;
     case ScreenTypes.FamilyCards:
-      content = <FamilyCardsTable />;
+      content = <CardTable type={ScreenTypes.FamilyCards} />;
       break;
     case ScreenTypes.BusinessCards:
-      content = <BusinessCardsTable />;
+      content = <CardTable type={ScreenTypes.BusinessCards} />;
       break;
     case ScreenTypes.ClubCards:
-      content = <ClubCardsTable />;
+      content = <CardTable type={ScreenTypes.ClubCards} />;
       break;
     case ScreenTypes.List:
       content = <ListTable />;

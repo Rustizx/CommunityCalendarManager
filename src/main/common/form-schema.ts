@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 
 const schema = yup.object().shape({
-  family_name: yup.string().required(),
+  name: yup.string().required(),
   contacts: yup.array().of(
     yup.object().shape({
       firstName: yup.string().required(),

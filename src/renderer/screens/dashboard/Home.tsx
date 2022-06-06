@@ -11,13 +11,22 @@ export default function HomeScreen() {
   function findNumberOfOrders() {
     let ord = 0;
     calendar.familyCards.forEach((e) => {
-      ord += parseInt(e.order.amountOfCalendarsPurchased, 10);
+      ord +=
+        e.order.amountOfCalendarsPurchased === ''
+          ? 0
+          : parseInt(e.order.amountOfCalendarsPurchased, 10);
     });
     calendar.businessCards.forEach((e) => {
-      ord += parseInt(e.order.amountOfCalendarsPurchased, 10);
+      ord +=
+        e.order.amountOfCalendarsPurchased === ''
+          ? 0
+          : parseInt(e.order.amountOfCalendarsPurchased, 10);
     });
     calendar.clubCards.forEach((e) => {
-      ord += parseInt(e.order.amountOfCalendarsPurchased, 10);
+      ord +=
+        e.order.amountOfCalendarsPurchased === ''
+          ? 0
+          : parseInt(e.order.amountOfCalendarsPurchased, 10);
     });
     return ord;
   }
@@ -25,13 +34,16 @@ export default function HomeScreen() {
   function findNumberOfDonations() {
     let don = 0;
     calendar.familyCards.forEach((e) => {
-      don += parseInt(e.order.amountDonated, 10);
+      don +=
+        e.order.amountDonated === '' ? 0 : parseInt(e.order.amountDonated, 10);
     });
     calendar.businessCards.forEach((e) => {
-      don += parseInt(e.order.amountDonated, 10);
+      don +=
+        e.order.amountDonated === '' ? 0 : parseInt(e.order.amountDonated, 10);
     });
     calendar.clubCards.forEach((e) => {
-      don += parseInt(e.order.amountDonated, 10);
+      don +=
+        e.order.amountDonated === '' ? 0 : parseInt(e.order.amountDonated, 10);
     });
     return don;
   }

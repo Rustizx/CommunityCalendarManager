@@ -7,8 +7,8 @@ export enum IntroScreenTypes {
 
 export enum DashboardScreensTypes {
   Home = 'Home',
-  FamilyCards = 'Family Cards',
-  BusinessCards = 'Business Cards',
-  ClubCards = 'Club Cards',
+  FamilyCards = 'Family',
+  BusinessCards = 'Business',
+  ClubCards = 'Club',
   List = 'List',
 }

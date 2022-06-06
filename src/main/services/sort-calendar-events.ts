@@ -2,6 +2,13 @@ import { SortCalendarEventFromDate } from '../models/ipc-models';
 import { CalendarEventModel } from '../models/calendar-model';
 import { shortMonths } from '../common/constants';
 
+function uniqByKeepLast(
+  data: CalendarEventModel[],
+  key: (arg0: CalendarEventModel) => any
+) {
+  return [...new Map(data.map((x) => [key(x), x])).values()];
+}
+
 export default function sortEvents(events: CalendarEventModel[]) {
   const newList: SortCalendarEventFromDate[] = [];
   events.forEach((event) => {
@@ -18,5 +25,8 @@ export default function sortEvents(events: CalendarEventModel[]) {
     });
   });
   newList.sort((a, b) => +new Date(a.date) - +new Date(b.date));
-  return newList.map((o) => o.event);
+  return uniqByKeepLast(
+    newList.map((o) => o.event),
+    (it) => it.name
+  );
 }

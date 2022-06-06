@@ -1,21 +1,19 @@
 import { ipcMain } from 'electron';
+import { Parser } from 'json2csv';
 import { months } from '../common/constants';
-import {
-  EmptyBusinessCard,
-  EmptyClubCard,
-  EmptyFamilyCard,
-} from '../common/empty-cards';
+import EmptyCard from '../common/empty-cards';
 import { LegacyFamilyModels } from '../models/legacy-calendar-model';
 import CalendarModel, {
-  BusinessCardModel,
   CalendarEventModel,
-  FamilyCardModel,
+  CardModel,
+  ExportableCalendarEventModel,
 } from '../models/calendar-model';
 import {
   EncryptedFileModel,
   ImportCalendarModel,
   ReadFileModel,
   WriteCalendarFileModel,
+  WriteCSVFileModel,
 } from '../models/ipc-models';
 import { encrypt, decrypt } from './service/encryption';
 import { familyCardsPDF, businessCardsPDF, clubCardsPDF } from './service/pdf';
@@ -54,8 +52,8 @@ function readLegacyCalendarFile(fileInfo: ReadFileModel): ImportCalendarModel {
     const data: LegacyFamilyModels[] = JSON.parse(
       fs.readFileSync(fileInfo.path, 'utf8')
     );
-    const familyCards: FamilyCardModel[] = [];
-    const businessCards: BusinessCardModel[] = [];
+    const familyCards: CardModel[] = [];
+    const businessCards: CardModel[] = [];
 
     for (let x = 0; x < data.length; x += 1) {
       const cal: CalendarEventModel[] = [];
@@ -74,7 +72,7 @@ function readLegacyCalendarFile(fileInfo: ReadFileModel): ImportCalendarModel {
       if (data[x].business !== undefined && data[x].business === true) {
         businessCards.push({
           id: data[x].id,
-          business_name: data[x].familyname,
+          name: data[x].familyname,
           contacts: [
             {
               firstName: data[x].firstnames[0].split(' ')[0],
@@ -102,7 +100,7 @@ function readLegacyCalendarFile(fileInfo: ReadFileModel): ImportCalendarModel {
       } else {
         familyCards.push({
           id: data[x].id,
-          family_name: data[x].familyname,
+          name: data[x].familyname,
           contacts: [
             {
               firstName: data[x].firstnames[0],
@@ -141,11 +139,9 @@ function readLegacyCalendarFile(fileInfo: ReadFileModel): ImportCalendarModel {
       dateCreated: '',
       dateModified: '',
       version: '',
-      defaultFamilyCard: EmptyFamilyCard,
+      defaultCard: EmptyCard,
       familyCards,
-      defaultBusinessCard: EmptyBusinessCard,
       businessCards,
-      defaultClubCard: EmptyClubCard,
       clubCards: [],
     };
 
@@ -226,6 +222,26 @@ function writeClubCardPDF(fileInfo: WriteCalendarFileModel): boolean {
   }
 }
 
+function writeCSVFile(fileInfo: WriteCSVFileModel): boolean {
+  try {
+    const csv = new Parser();
+    const list: ExportableCalendarEventModel[] = [];
+    fileInfo.events.forEach((event) => {
+      list.push({
+        name: event.name,
+        type: event.type,
+        date: `${event.date.month.slice(0, 3)} ${event.date.day}`,
+      });
+    });
+    fs.writeFileSync(fileInfo.path, csv.parse(list), {
+      encoding: 'utf8',
+    });
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
 export default function FileManager() {
   ipcMain.handle('files:write-calendar-file', (_event, args) => {
     return writeCalendarFile(args);
@@ -244,5 +260,8 @@ export default function FileManager() {
   });
   ipcMain.handle('files:read-legacy-file', (_event, args) => {
     return readLegacyCalendarFile(args);
+  });
+  ipcMain.handle('files:write-csv-file', (_event, args) => {
+    return writeCSVFile(args);
   });
 }
