@@ -1,49 +1,63 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import icon from '../../assets/icon.svg';
-import './App.css';
 
-const Hello = () => {
-  return (
-    <div>
-      <div className="Hello">
-        <img width="200px" alt="icon" src={icon} />
-      </div>
-      <h1>electron-react-boilerplate</h1>
-      <div className="Hello">
-        <a
-          href="https://electron-react-boilerplate.js.org/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              📚
-            </span>
-            Read our docs
-          </button>
-        </a>
-        <a
-          href="https://github.com/sponsors/electron-react-boilerplate"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              🙏
-            </span>
-            Donate
-          </button>
-        </a>
-      </div>
-    </div>
-  );
-};
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './stylesheets/App.scss';
+
+import routePaths from 'main/common/route-paths';
+import {
+  DashboardScreensTypes,
+  IntroScreenTypes,
+} from 'main/common/screen-types';
+
+import IntroScreens from './screens/IntroScreens';
+import Dashboard from './screens/dashboard';
 
 export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Hello />} />
+        {/* INTRO SCREENS */}
+        <Route
+          path={routePaths.welcome}
+          element={<IntroScreens type={IntroScreenTypes.Welcome} />}
+        />
+        <Route
+          path={routePaths.enterPassword}
+          element={<IntroScreens type={IntroScreenTypes.EnterPassword} />}
+        />
+        <Route
+          path={routePaths.resetPassword}
+          element={<IntroScreens type={IntroScreenTypes.ResetPassword} />}
+        />
+        <Route
+          path={routePaths.makeCalendar}
+          element={<IntroScreens type={IntroScreenTypes.MakeCalendar} />}
+        />
+        {/* DASHBOARD SCREENS */}
+        <Route
+          path={routePaths.home}
+          element={<Dashboard screen={DashboardScreensTypes.Home} />}
+        />
+        <Route
+          path={routePaths.familyCards}
+          element={<Dashboard screen={DashboardScreensTypes.FamilyCards} />}
+        />
+        <Route
+          path={routePaths.businessCards}
+          element={<Dashboard screen={DashboardScreensTypes.BusinessCards} />}
+        />
+        <Route
+          path={routePaths.clubCards}
+          element={<Dashboard screen={DashboardScreensTypes.ClubCards} />}
+        />
+        <Route
+          path={routePaths.list}
+          element={<Dashboard screen={DashboardScreensTypes.List} />}
+        />
+        <Route
+          path={routePaths.raw}
+          element={<Dashboard screen={DashboardScreensTypes.Raw} />}
+        />
       </Routes>
     </Router>
   );

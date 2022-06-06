@@ -1,6 +1,6 @@
 {
   "name": "community-calendar-manager",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A community calendar fundraiser manager",
   "main": "./dist/main/main.js",
   "author": {

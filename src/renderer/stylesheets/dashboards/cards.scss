@@ -1,0 +1,126 @@
+.card-container {
+  margin-left: 50px;
+  margin-right: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-options {
+  display: flex;
+  align-self: end;
+  position: relative;
+  top: -68px;
+}
+
+.card-options-items {
+  margin-left: 10px;
+}
+
+.card-table {
+  position: relative;
+  top: -40px;
+}
+
+.card-modal {
+  background: #f3f3f3;
+}
+
+.card-title {
+  font-family: 'NunitoBlack';
+  font-size: 30px;
+  color: black;
+  opacity: 70%;
+  margin-left: 10px;
+}
+
+.form-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-box-container {
+  display: flex;
+  margin: 10px;
+  background-color: white;
+  border-radius: 10px;
+  filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.16));
+}
+
+.form-box-container-name {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+  background-color: white;
+  border-radius: 10px;
+  filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.16));
+}
+
+.form-name-container {
+  display: flex;
+}
+
+.form-box-container-table {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  background-color: white;
+  border-radius: 10px;
+  filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.16));
+}
+
+.form-box-title {
+  font-family: 'NunitoExtraBold';
+  font-size: 20px;
+  color: white;
+}
+
+.form-title-box {
+  border-radius: 10px;
+  position: relative;
+  width: 200px;
+  height: 40px;
+  top: 16px;
+  left: 25px;
+  filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.16));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-component {
+  margin: 15px;
+}
+
+.form-text {
+  font-family: 'NunitoSemiBold';
+  color: black;
+  font-size: 16px;
+}
+
+.form-border {
+  border-color: black;
+  border-width: 1px;
+}
+
+.form-contact-text {
+  font-family: 'NunitoBold';
+  color: black;
+  font-size: 15px;
+  text-align: center;
+  opacity: 70%;
+  transform: rotate(-90deg);
+  position: relative;
+  top: 10px;
+  left: 45px;
+  width: 40px;
+}
+
+.form-card-table {
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.form-card-table-button {
+  margin: 20px;
+}

@@ -1,25 +1,33 @@
 import { contextBridge, ipcRenderer } from 'electron';
+import {
+  ReadFileModel,
+  WriteCalendarFileModel,
+  WriteCSVFileModel,
+} from './models/ipc-models';
 
 contextBridge.exposeInMainWorld('electron', {
-  ipcRenderer: {
-    myPing() {
-      ipcRenderer.send('ipc-example', 'ping');
-    },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    on(channel: string, func: (...args: any[]) => void) {
-      const validChannels = ['ipc-example'];
-      if (validChannels.includes(channel)) {
-        // Deliberately strip event as it includes `sender`
-        ipcRenderer.on(channel, (_event, ...args) => func(...args));
-      }
-    },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    once(channel: string, func: (...args: any[]) => void) {
-      const validChannels = ['ipc-example'];
-      if (validChannels.includes(channel)) {
-        // Deliberately strip event as it includes `sender`
-        ipcRenderer.once(channel, (_event, ...args) => func(...args));
-      }
-    },
+  files: {
+    readCalendarFile: (fileInfo: ReadFileModel) =>
+      ipcRenderer.invoke('files:read-calendar-file', fileInfo),
+    readLegacyCalendarFile: (fileInfo: ReadFileModel) =>
+      ipcRenderer.invoke('files:read-legacy-file', fileInfo),
+    writeCalendarFile: (fileInfo: WriteCalendarFileModel) =>
+      ipcRenderer.invoke('files:write-calendar-file', fileInfo),
+    writeFamilyCardPDF: (fileInfo: WriteCalendarFileModel) =>
+      ipcRenderer.invoke('files:write-family-pdf-file', fileInfo),
+    writeBusinessCardPDF: (fileInfo: WriteCalendarFileModel) =>
+      ipcRenderer.invoke('files:write-business-pdf-file', fileInfo),
+    writeClubCardPDF: (fileInfo: WriteCalendarFileModel) =>
+      ipcRenderer.invoke('files:write-club-pdf-file', fileInfo),
+    writeCSV: (fileInfo: WriteCSVFileModel) =>
+      ipcRenderer.invoke('files:write-csv-file', fileInfo),
+  },
+  dialogs: {
+    openCalendarFileDialog: () =>
+      ipcRenderer.invoke('dialog:open-calender-file'),
+    createCalendarFileDialog: () =>
+      ipcRenderer.invoke('dialog:create-calender-file'),
+    createPDFFileDialog: () => ipcRenderer.invoke('dialog:create-pdf-file'),
+    createCSVDialog: () => ipcRenderer.invoke('dialog:create-csv-file'),
   },
 });
