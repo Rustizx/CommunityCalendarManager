@@ -3,18 +3,14 @@
 /* eslint-disable new-cap */
 
 import sortEvents from '../../services/sort-calendar-events';
-import {
-  BusinessCardModel,
-  ClubCardModel,
-  FamilyCardModel,
-} from '../../models/calendar-model';
+import { CardModel } from '../../models/calendar-model';
 
 const jsPDF = require('jspdf');
 require('jspdf-autotable');
 
 const headers = ['Name', 'Date', 'Type'];
 
-export function familyCardsPDF(familyCards: FamilyCardModel[]) {
+export function familyCardsPDF(familyCards: CardModel[]) {
   const doc = new jsPDF.jsPDF({
     format: 'letter',
   });
@@ -64,7 +60,7 @@ export function familyCardsPDF(familyCards: FamilyCardModel[]) {
     // Info
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.text(`${family.family_name}`, 68, 35);
+    doc.text(`${family.name}`, 68, 35);
     if (family.contacts[1] !== undefined) {
       doc.text(
         `${family.contacts[0].firstName} ${family.contacts[0].lastName} & ${family.contacts[1].firstName} ${family.contacts[1].lastName}`,
@@ -148,11 +144,11 @@ export function familyCardsPDF(familyCards: FamilyCardModel[]) {
       doc.setFontSize(8);
       doc.text('No Changes', 156, 82 + shift);
       doc.setFontSize(10);
-      doc.text(`${family.family_name} Family - Page 1 of 1`, 190, 263, {
+      doc.text(`${family.name} Family - Page 1 of 1`, 190, 263, {
         align: 'right',
       });
     } else {
-      doc.text(`${family.family_name} Family - Page 1 of 2`, 190, 263, {
+      doc.text(`${family.name} Family - Page 1 of 2`, 190, 263, {
         align: 'right',
       });
       page += 1;
@@ -172,7 +168,7 @@ export function familyCardsPDF(familyCards: FamilyCardModel[]) {
       doc.text('No Changes', 156, 82 + shift);
       doc.setFontSize(10);
       doc.text(`Page ${page} of ${pages}`, 25, 263);
-      doc.text(`${family.family_name} Family - Page 2 of 2`, 190, 263, {
+      doc.text(`${family.name} Family - Page 2 of 2`, 190, 263, {
         align: 'right',
       });
     }
@@ -185,7 +181,7 @@ export function familyCardsPDF(familyCards: FamilyCardModel[]) {
   return doc.output();
 }
 
-export function businessCardsPDF(familyCards: BusinessCardModel[]) {
+export function businessCardsPDF(familyCards: CardModel[]) {
   const doc = new jsPDF.jsPDF({
     format: 'letter',
   });
@@ -235,7 +231,7 @@ export function businessCardsPDF(familyCards: BusinessCardModel[]) {
     // Info
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.text(`${family.business_name}`, 68, 35);
+    doc.text(`${family.name}`, 68, 35);
     if (family.contacts[1] !== undefined) {
       doc.text(
         `${family.contacts[0].firstName} ${family.contacts[0].lastName} & ${family.contacts[1].firstName} ${family.contacts[1].lastName}`,
@@ -319,11 +315,11 @@ export function businessCardsPDF(familyCards: BusinessCardModel[]) {
       doc.setFontSize(8);
       doc.text('No Changes', 156, 82 + shift);
       doc.setFontSize(10);
-      doc.text(`${family.business_name} Business - Page 1 of 1`, 190, 263, {
+      doc.text(`${family.name} Business - Page 1 of 1`, 190, 263, {
         align: 'right',
       });
     } else {
-      doc.text(`${family.business_name} Business - Page 1 of 2`, 190, 263, {
+      doc.text(`${family.name} Business - Page 1 of 2`, 190, 263, {
         align: 'right',
       });
       page += 1;
@@ -343,7 +339,7 @@ export function businessCardsPDF(familyCards: BusinessCardModel[]) {
       doc.text('No Changes', 156, 82 + shift);
       doc.setFontSize(10);
       doc.text(`Page ${page} of ${pages}`, 25, 263);
-      doc.text(`${family.business_name} Business - Page 2 of 2`, 190, 263, {
+      doc.text(`${family.name} Business - Page 2 of 2`, 190, 263, {
         align: 'right',
       });
     }
@@ -356,7 +352,7 @@ export function businessCardsPDF(familyCards: BusinessCardModel[]) {
   return doc.output();
 }
 
-export function clubCardsPDF(familyCards: ClubCardModel[]) {
+export function clubCardsPDF(familyCards: CardModel[]) {
   const doc = new jsPDF.jsPDF({
     format: 'letter',
   });
@@ -406,7 +402,7 @@ export function clubCardsPDF(familyCards: ClubCardModel[]) {
     // Info
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.text(`${family.club_name}`, 68, 35);
+    doc.text(`${family.name}`, 68, 35);
     if (family.contacts[1] !== undefined) {
       doc.text(
         `${family.contacts[0].firstName} ${family.contacts[0].lastName} & ${family.contacts[1].firstName} ${family.contacts[1].lastName}`,
@@ -490,11 +486,11 @@ export function clubCardsPDF(familyCards: ClubCardModel[]) {
       doc.setFontSize(8);
       doc.text('No Changes', 156, 82 + shift);
       doc.setFontSize(10);
-      doc.text(`${family.club_name} Club - Page 1 of 1`, 190, 263, {
+      doc.text(`${family.name} Club - Page 1 of 1`, 190, 263, {
         align: 'right',
       });
     } else {
-      doc.text(`${family.club_name} Club - Page 1 of 2`, 190, 263, {
+      doc.text(`${family.name} Club - Page 1 of 2`, 190, 263, {
         align: 'right',
       });
       page += 1;
@@ -514,7 +510,7 @@ export function clubCardsPDF(familyCards: ClubCardModel[]) {
       doc.text('No Changes', 156, 82 + shift);
       doc.setFontSize(10);
       doc.text(`Page ${page} of ${pages}`, 25, 263);
-      doc.text(`${family.club_name} Club - Page 2 of 2`, 190, 263, {
+      doc.text(`${family.name} Club - Page 2 of 2`, 190, 263, {
         align: 'right',
       });
     }

@@ -28,34 +28,32 @@ export default function ListTable() {
     const l: CalendarEventModel[] = [];
     const fam = calendar.businessCards;
     for (let i = 0; i < fam.length; i += 1) {
-      if (parseInt(fam[i].order.amountOfCalendarsPurchased, 10) > 0) {
-        for (let x = 0; x < fam[i].calendarEvents.length; x += 1) {
-          l.push(fam[i].calendarEvents[x]);
-        }
+      for (let x = 0; x < fam[i].calendarEvents.length; x += 1) {
+        l.push(fam[i].calendarEvents[x]);
       }
     }
     return l;
   }
 
-  function fetchClubCardEvents() {
-    const l: CalendarEventModel[] = [];
-    const fam = calendar.clubCards;
-    for (let i = 0; i < fam.length; i += 1) {
-      if (parseInt(fam[i].order.amountOfCalendarsPurchased, 10) > 0) {
-        for (let x = 0; x < fam[i].calendarEvents.length; x += 1) {
-          l.push(fam[i].calendarEvents[x]);
-        }
-      }
-    }
-    return l;
-  }
+  // function fetchClubCardEvents() {
+  //   const l: CalendarEventModel[] = [];
+  //   const fam = calendar.clubCards;
+  //   for (let i = 0; i < fam.length; i += 1) {
+  //     if (parseInt(fam[i].order.amountOfCalendarsPurchased, 10) > 0) {
+  //       for (let x = 0; x < fam[i].calendarEvents.length; x += 1) {
+  //         l.push(fam[i].calendarEvents[x]);
+  //       }
+  //     }
+  //   }
+  //   return l;
+  // }
 
   function fetchEvents() {
     const empty: CalendarEventModel[] = [];
     const events = empty.concat(
       fetchFamilyCardEvents(),
-      fetchBusinessCardEvents(),
-      fetchClubCardEvents()
+      fetchBusinessCardEvents()
+      // fetchClubCardEvents()
     );
     return sortEvents(events);
   }
