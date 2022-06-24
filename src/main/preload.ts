@@ -13,6 +13,8 @@ contextBridge.exposeInMainWorld('electron', {
       ipcRenderer.invoke('files:read-legacy-file', fileInfo),
     writeCalendarFile: (fileInfo: WriteCalendarFileModel) =>
       ipcRenderer.invoke('files:write-calendar-file', fileInfo),
+    writeLabelPDF: (fileInfo: WriteCalendarFileModel) =>
+      ipcRenderer.invoke('files:write-label-file', fileInfo),
     writeFamilyCardPDF: (fileInfo: WriteCalendarFileModel) =>
       ipcRenderer.invoke('files:write-family-pdf-file', fileInfo),
     writeBusinessCardPDF: (fileInfo: WriteCalendarFileModel) =>

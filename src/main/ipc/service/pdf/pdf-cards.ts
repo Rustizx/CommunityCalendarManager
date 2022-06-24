@@ -2,8 +2,8 @@
 /* eslint-disable import/no-duplicates */
 /* eslint-disable new-cap */
 
-import sortEvents from '../../services/sort-calendar-events';
-import { CardModel } from '../../models/calendar-model';
+import sortEvents from '../../../services/sort-calendar-events';
+import { CardModel } from '../../../models/calendar-model';
 
 const jsPDF = require('jspdf');
 require('jspdf-autotable');

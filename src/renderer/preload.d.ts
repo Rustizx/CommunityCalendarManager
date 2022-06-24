@@ -13,6 +13,7 @@ declare global {
         writeCalendarFile(
           fileInfo: WriteCalendarFileModel
         ): ImportCalendarModel;
+        writeLabelPDF(fileInfo: WriteCalendarFileModel): string;
         writeFamilyCardPDF(fileInfo: WriteCalendarFileModel): string;
         writeBusinessCardPDF(fileInfo: WriteCalendarFileModel): string;
         writeClubCardPDF(fileInfo: WriteCalendarFileModel): string;

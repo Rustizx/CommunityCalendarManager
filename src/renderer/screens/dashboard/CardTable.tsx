@@ -300,6 +300,18 @@ export default function CardTable(props: CardTableProps) {
     }
   }
 
+  async function clickSaveLabelPDF() {
+    const filePath: string =
+      await window.electron.dialogs.createPDFFileDialog();
+    if (filePath !== '') {
+      await window.electron.files.writeLabelPDF({
+        path: filePath,
+        password: '',
+        calendar,
+      });
+    }
+  }
+
   const dateTable = (
     values: CardModel,
     handleChange:
@@ -402,6 +414,13 @@ export default function CardTable(props: CardTableProps) {
             onClick={() => clickSavePDF()}
           >
             Get Cards PDF
+          </Button>
+          <Button
+            className="card-options-items"
+            variant="primary"
+            onClick={() => clickSaveLabelPDF()}
+          >
+            Get Labels
           </Button>
           <Form.Control
             className="card-options-items"
