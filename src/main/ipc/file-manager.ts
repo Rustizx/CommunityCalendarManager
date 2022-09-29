@@ -16,7 +16,12 @@ import {
   WriteCSVFileModel,
 } from '../models/ipc-models';
 import { encrypt, decrypt } from './service/encryption';
-import { familyCardsPDF, businessCardsPDF, clubCardsPDF } from './service/pdf';
+import {
+  familyCardsPDF,
+  businessCardsPDF,
+  clubCardsPDF,
+} from './service/pdf/pdf-cards';
+import labelPDF from './service/pdf/pdf-labels';
 
 const fs = require('fs');
 
@@ -183,6 +188,17 @@ function writeCalendarFile(
   });
 }
 
+function writeLabelPDF(fileInfo: WriteCalendarFileModel): boolean {
+  try {
+    const pdfData = labelPDF(fileInfo.calendar);
+
+    fs.writeFileSync(fileInfo.path, pdfData, { encoding: 'utf8' });
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
 function writeFamilyCardPDF(fileInfo: WriteCalendarFileModel): boolean {
   try {
     const { familyCards } = fileInfo.calendar;
@@ -248,6 +264,9 @@ export default function FileManager() {
   });
   ipcMain.handle('files:read-calendar-file', (_event, args) => {
     return readCalendarFile(args);
+  });
+  ipcMain.handle('files:write-label-file', (_event, args) => {
+    return writeLabelPDF(args);
   });
   ipcMain.handle('files:write-family-pdf-file', (_event, args) => {
     return writeFamilyCardPDF(args);
